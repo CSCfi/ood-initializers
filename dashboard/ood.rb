@@ -18,13 +18,13 @@ ENV["OOD_NATIVE_VNC_LOGIN_HOST"] = "puhti.csc.fi"
 
 ENV["SLURM_OOD_ENV"] = `df -h | grep ood | cut -d " " -f 1 | rev | cut -d "/" -f 1  | rev`
 
-require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_slurm_partition" -%>
-require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_slurm_project" -%>
-require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_slurm_limits" -%>
-require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_cores" -%>
-require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_time" -%>
-require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_memory" -%>
-require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_nvme" -%>
+require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_slurm_partition" 
+require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_slurm_project" 
+require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_slurm_limits" 
+require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_cores" 
+require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_time" 
+require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_memory" 
+require "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/util/attributes/csc_nvme" 
 
 
 
