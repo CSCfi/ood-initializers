@@ -16,7 +16,7 @@ ENV["OOD_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json:" + ENV.fetch("O
 ENV["ENABLE_NATIVE_VNC"] = "yes"
 ENV["OOD_NATIVE_VNC_LOGIN_HOST"] = "puhti.csc.fi"
 
-ENV["SLURM_OOD_ENV"] = `df -h | grep ood | cut -d " " -f 1 | rev | cut -d "/" -f 1  | rev`
+ENV["SLURM_OOD_ENV"] = `df -h | grep ood | cut -d " " -f 1 | rev | cut -d "/" -f 1  | rev | tr -d '\n'`
 
 
 
@@ -27,4 +27,4 @@ ENV["OOD_QUOTA_THRESHOLD"] = ENV.fetch("OOD_QUOTA_THRESHOLD", "0.95")
 ENV["OOD_BALANCE_THRESHOLD"] = ENV.fetch("OOD_BALANCE_THRESHOLD", "10000000000")
 
 # Update quota and balance JSON files in tmp, set BU limit to 5%
-system({"LD_LIBRARY_PATH" => "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/lib:#{ENV["LD_LIBRARY_PATH"]}"}, "/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/soft/csc-projects", "-b", "/tmp/#{ENV["USER"]}_ood_balance.json", "-q", "/tmp/#{ENV["USER"]}_ood_quotas.json", "-r", "0.05")
+system({"LD_LIBRARY_PATH" => "/ood/deps/lib:#{ENV["LD_LIBRARY_PATH"]}"}, "/ood/deps/soft/csc-projects", "-b", "/tmp/#{ENV["USER"]}_ood_balance.json", "-q", "/tmp/#{ENV["USER"]}_ood_quotas.json", "-r", "0.05")
