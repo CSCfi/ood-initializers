@@ -16,7 +16,18 @@ ENV["OOD_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json:" + ENV.fetch("O
 ENV["ENABLE_NATIVE_VNC"] = "yes"
 ENV["OOD_NATIVE_VNC_LOGIN_HOST"] = "puhti.csc.fi"
 
-ENV["SLURM_OOD_ENV"] = `df -h | grep ood | cut -d " " -f 1 | rev | cut -d "/" -f 1  | rev | tr -d '\n'`
+ENV["SLURM_OOD_ENV"] = case ENV["CSC_OOD_ENVIRONMENT"]
+                       when "production"
+                         "prod"
+                       when "staging"
+                         "staging"
+                       when "future"
+                         "future"
+                       when "testing"
+                         "test"
+                       else 
+                         "test"
+                       end
 
 
 
