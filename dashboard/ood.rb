@@ -28,7 +28,7 @@ ENV["SLURM_OOD_ENV"] = case ENV["CSC_OOD_ENVIRONMENT"]
                        else 
                          "test"
                        end
-ENV["GOPATH"]="/appl/opt/ood/#{ENV["SLURM_OOD_ENV"]}/go"
+
 
 
 
