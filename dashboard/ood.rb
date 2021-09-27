@@ -10,6 +10,9 @@ OodFilesApp.candidate_favorite_paths.tap do |paths|
   paths.concat projects.map { |p| FavoritePath.new("/scratch/#{p}") }
 end
 
+NavConfig.categories_whitelist=true
+NavConfig.categories=["Files", "Jobs", "Apps​", "Terminal", "Tools"]
+
 # Add quota and balance file path for the user
 #ENV["OOD_QUOTA_PATH"] = "/tmp/#{ENV["USER"]}_ood_quotas.json:" + ENV.fetch("OOD_QUOTA_PATH", "")
 #ENV["OOD_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json:" + ENV.fetch("OOD_BALANCE_PATH", "")
@@ -36,6 +39,5 @@ ENV["SLURM_OOD_ENV"] = case ENV["CSC_OOD_ENVIRONMENT"]
 ENV["OOD_QUOTA_THRESHOLD"] = ENV.fetch("OOD_QUOTA_THRESHOLD", "0.95")
 # Balance threshold to include all balances, filtering is done when creating JSON
 ENV["OOD_BALANCE_THRESHOLD"] = ENV.fetch("OOD_BALANCE_THRESHOLD", "10000000000")
-
 # Update quota and balance JSON files in tmp, set BU limit to 5%
 #system({"LD_LIBRARY_PATH" => "/ood/deps/lib:#{ENV["LD_LIBRARY_PATH"]}"}, "/ood/deps/soft/csc-projects", "-b", "/tmp/#{ENV["USER"]}_ood_balance.json", "-q", "/tmp/#{ENV["USER"]}_ood_quotas.json", "-r", "0.05")
