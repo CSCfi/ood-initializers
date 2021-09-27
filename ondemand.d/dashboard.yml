@@ -15,3 +15,5 @@ dashboard_layout:
 pinned_apps:
   - "sys/shell"
   - "sys/files"
+  - "sys/rclone"
+  - "sys/ood-base-jupyter"
