@@ -7,7 +7,7 @@ dashboard_layout:
     - columns:
       - width: 12
         widgets:
-          - motd
+          - csc_motd
     - columns:
       - width: 12
         widgets:
