@@ -34,7 +34,7 @@ en:
     motd_erb_render_error: "MOTD was not parsed or rendered correctly: %{error_message}"
     nav_help_support: "Contact Support"
     nav_help_two_factor: "Configure Two-Factor Authentication"
-
+    
     quota_additional_message: "Consider deleting or archiving files to free up disk space."
     quota_reload_message: "Reload page to see updated quota. Quotas are updated every 5 minutes."
     quota_warning_prefix_html: "Quota limit warning for"
@@ -45,6 +45,8 @@ en:
     balance_message: "%{units_balance} is %{value}"
 
     welcome_html: ""
+    nav_help_docs: "CSC User guides"
+    nav_help_change_password: "Customer portal (my.csc.fi)"
 
     # General translations
     apps_setup_failure_html: |
