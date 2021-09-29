@@ -1,0 +1,19 @@
+dashboard_layout:
+  rows:
+    - columns:
+      - width: 12
+        widgets:
+          - logo
+    - columns:
+      - width: 12
+        widgets:
+          - csc_motd
+    - columns:
+      - width: 12
+        widgets:
+          - pinned_apps
+pinned_apps:
+  - "sys/shell"
+  - "sys/files"
+  - "sys/ood-rclone"
+  - "sys/ood-base-jupyter"
