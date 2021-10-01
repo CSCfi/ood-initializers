@@ -10,6 +10,22 @@ OodFilesApp.candidate_favorite_paths.tap do |paths|
   paths.concat projects.map { |p| FavoritePath.new("/scratch/#{p}") }
 end
 
+# Based on https://discourse.osc.edu/t/set-order-of-interactive-apps-menu-items/1271
+def OodAppGroup.groups_for(apps: [], group_by: :category, nav_limit: nil)
+  grouped = apps.group_by { |app|
+    app.respond_to?(group_by) ? app.send(group_by) : app.metadata[group_by]
+  }.map { |k,v|
+    OodAppGroup.new(title: k, apps: v.sort_by { |a| a.title }, nav_limit: nav_limit)
+  }.sort_by { |g| [ g.title.nil? ? 1 : 0, g.title ] }
+
+  if group_by.to_s == "subcategory" then
+    # Sort Course environments subcategory to end
+    grouped.sort_by { |g| g.title == "Course environments" ? 1 : 0}
+  else
+    grouped
+  end
+end
+
 NavConfig.categories_whitelist=true
 NavConfig.categories=["Files", "Jobs", "Apps​", "Terminal", "Tools"]
 
