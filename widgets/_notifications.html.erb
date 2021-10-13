@@ -54,10 +54,10 @@
   `;
   document.head.appendChild(style);
 </script>
-<%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.each do |quota| -%>
+<%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse.each do |quota| -%>
   <%= render :partial => 'widgets/quota_notification', :locals => {:quota => quota} %>
 <%- end -%>
-<% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.each do |balance| %>  
+<% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>  
   <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} %>
 <% end %>
 
