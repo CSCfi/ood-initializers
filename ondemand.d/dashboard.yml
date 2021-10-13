@@ -9,6 +9,7 @@ dashboard_layout:
         widgets:
           - csc_motd
       - width: 6
+        widgets:
           - notifications
     - columns:
       - width: 12
