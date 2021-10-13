@@ -55,8 +55,8 @@ ENV["SLURM_OOD_ENV"] = case ENV["CSC_OOD_ENVIRONMENT"]
 
 
 # These are temporary for debug only, should/could be defined elsewhere
-#ENV["OOD_QUOTA_THRESHOLD"] = ENV.fetch("OOD_QUOTA_THRESHOLD", "0.95")
+ENV["OOD_QUOTA_THRESHOLD"] = ENV.fetch("OOD_QUOTA_THRESHOLD", "0.9")
 # Balance threshold to include all balances, filtering is done when creating JSON
-#ENV["OOD_BALANCE_THRESHOLD"] = ENV.fetch("OOD_BALANCE_THRESHOLD", "0.05")
+ENV["OOD_BALANCE_THRESHOLD"] = ENV.fetch("OOD_BALANCE_THRESHOLD", "0.1")
 # Update quota and balance JSON files in tmp, set BU limit to 5%
 system({"LD_LIBRARY_PATH" => "/ood/deps/lib:#{ENV["LD_LIBRARY_PATH"]}"}, "/ood/deps/soft/csc-projects", "-b", "#{ENV["OOD_CSC_BALANCE_PATH"]}", "-q", "#{ENV["OOD_CSC_QUOTA_PATH"]}")
