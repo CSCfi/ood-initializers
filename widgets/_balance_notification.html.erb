@@ -1,0 +1,10 @@
+<div class="notification notification-warning">
+  <i class="fas fa-exclamation-triangle notification-icon"></i>
+  <div class="notification-content">
+    <h5 class="notification-title">Balance warning for <%= balance.project -%></h5>
+    <p class="notification-message">
+    <p class="notification-message"><%= balance.to_s %></p>
+    <%= render( partial: "widgets/progress_bar", locals: { percent: balance.percent_usage }) %>
+    </p>
+  </div>
+</div>
