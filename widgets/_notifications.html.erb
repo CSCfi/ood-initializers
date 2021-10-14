@@ -2,9 +2,6 @@
   const style = document.createElement('style');
   style.textContent = `
     .notification {
-        border-style: solid;
-        border-width: 2px;
-        border-radius: 5px;
         padding: 10px;
         margin: 10px;
         display: flex;
@@ -16,7 +13,7 @@
         border-color: #ffab7f;
       }
     .notification-warning .progress-bar {
-        background-color: #ff5800; 
+        background-color: #002f5f; 
       }
     .notification-info {
         border-color: #7fb2bb;
@@ -27,7 +24,7 @@
     .notification-title {
         color: #595959;
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
       }
     .notification-title a {
         color: #595959;
@@ -46,7 +43,7 @@
         color: #006779;
       }
     .notification-warning .notification-icon {
-        color: #ff5800;
+        color: #e6bf12;
       }
     .notification-error .notification-icon {
         color: #b90729;
@@ -54,10 +51,43 @@
   `;
   document.head.appendChild(style);
 </script>
+<style>
+div.scroll {
+    overflow: auto;
+    height: 330px;
+    scroll-padding-top: 10%;
+      border-radius: 6px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 10px 20px, rgb(0 0 0 / 20%) 0px 5px 5px;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+}
+    .title-underline {
+        width: 44px;
+        height: 4px;
+        background-color: #006778;
+        margin-top: 10px;
+      }
+
+
+    .notification-title {                 
+    display: block;           
+    font-size: 16px;          
+    color: #595959;           
+    font-weight: 500;         
+    margin-bottom: 10px;      
+    }
+</style>
+<div class="scroll" id=csc_warnings>
+    <div class="notification-title">
+    Notifications
+    <div class="motd-title-underline"></div>
+    </div>
 <%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse.each do |quota| -%>
   <%= render :partial => 'widgets/quota_notification', :locals => {:quota => quota} %>
 <%- end -%>
 <% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>  
   <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} %>
 <% end %>
-
+</div>
