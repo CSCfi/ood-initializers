@@ -34,6 +34,7 @@ en:
     motd_erb_render_error: "MOTD was not parsed or rendered correctly: %{error_message}"
     nav_help_support: "Contact Support"
     nav_help_two_factor: "Configure Two-Factor Authentication"
+    nav_help_custom: "User survey"
     
     quota_additional_message: "Consider deleting or archiving files to free up disk space."
     quota_reload_message: "Reload page to see updated quota. Quotas are updated every 5 minutes."
