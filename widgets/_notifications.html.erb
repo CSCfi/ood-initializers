@@ -48,46 +48,57 @@
     .notification-error .notification-icon {
         color: #b90729;
       }
-  `;
-  document.head.appendChild(style);
-</script>
-<style>
-div.scroll {
-    overflow: auto;
-    height: 330px;
-    scroll-padding-top: 10%;
-      border-radius: 6px;
-  box-shadow: rgb(0 0 0 / 15%) 0px 10px 20px, rgb(0 0 0 / 20%) 0px 5px 5px;
-  padding: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-
-}
+    .notifications {
+        overflow-y: auto;
+        border-radius: 6px;
+        box-shadow: rgb(0 0 0 / 15%) 0px 10px 20px, rgb(0 0 0 / 20%) 0px 5px 5px;
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
     .title-underline {
         width: 44px;
         height: 4px;
         background-color: #006778;
         margin-top: 10px;
       }
-
-
-    .notification-title {                 
-    display: block;           
-    font-size: 16px;          
-    color: #595959;           
-    font-weight: 500;         
-    margin-bottom: 10px;      
+    .notification-title {
+        display: block;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: #595959;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+    .warnings .notification:not(:last-child) {
+      border-bottom: 2px solid #595959;
+      }
+  `;
+  document.head.appendChild(style);
+</script>
+<script>
+  function setNotificationsHeight() {
+      let motd = $(".motd").first();
+      let notifications = $("#notifications");
+      if (motd && notifications) {
+          notifications.height(motd.height());
+        }
     }
-</style>
-<div class="scroll" id=csc_warnings>
-    <div class="notification-title">
+  $(document).ready(setNotificationsHeight);
+  $(window).resize(setNotificationsHeight);
+</script>
+<div class="notifications" id="notifications" style="height: 100px">
+  <div class="notification-title">
     Notifications
     <div class="motd-title-underline"></div>
-    </div>
-<%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse.each do |quota| -%>
-  <%= render :partial => 'widgets/quota_notification', :locals => {:quota => quota} %>
-<%- end -%>
-<% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>  
-  <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} %>
-<% end %>
+  </div>
+  <div class="warnings">
+  <%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse.each do |quota| -%>
+    <%= render :partial => 'widgets/quota_notification', :locals => {:quota => quota} %>
+  <%- end -%>
+  <% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>
+    <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} %>
+  <% end %>
+  </div>
 </div>
+
