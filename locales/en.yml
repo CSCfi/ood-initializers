@@ -85,9 +85,9 @@ en:
       The %{title} session data for this session can be accessed
       under the %{data_link_tag}.
     batch_connect_sessions_error_invalid_job_name_html: |
-      If this job failed to submit because of an invalid job name
-      please ask your administrator to configure OnDemand to set the
-      environment variable OOD_JOB_NAME_ILLEGAL_CHARS.
+      Please verify that the selected project has BU left and the
+      requested time, number of cores, memory, local disk and number
+      of GPUs are within the limits for the selected partition.
     batch_connect_sessions_delete_confirm: "Are you sure?"
     batch_connect_sessions_delete_hover: "Delete Session"
     batch_connect_sessions_delete_title: "Delete"
