@@ -1,9 +1,12 @@
-<div class="notification notification-warning">
+<div class="notification notification-warning" data-project="<%= balance.project -%>">
   <i class="fas fa-exclamation-triangle notification-icon"></i>
   <div class="notification-content">
-    <h5 class="notification-title">Balance warning for <%= balance.project -%></h5>
+    <div class="d-flex justify-content-between">
+      <h5 class="notification-title">Balance warning for <%= balance.project -%></h5>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="hideBalanceWarning('<%= balance.project -%>')"><i class="fas fa-eye-slash"></i> Hide</button>
+    </div>
     <p class="notification-message">
-    <p class="notification-message"><%= balance.to_s %></p>
+    <%= balance.to_s %>
     <%= render( partial: "widgets/progress_bar", locals: { percent: balance.percent_usage }) %>
     </p>
   </div>
