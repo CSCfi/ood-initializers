@@ -30,6 +30,8 @@ def OodAppGroup.groups_for(apps: [], group_by: :category, nav_limit: nil)
 end
 
 NavConfig.categories_whitelist=true
+
+# Apps category has an invisible space character to differentiate it from the normal OOD Apps category
 NavConfig.categories=["Files", "Jobs", "Apps​", "Terminal", "Tools"]
 
 # Add quota and balance file path for the user
