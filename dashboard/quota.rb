@@ -35,11 +35,11 @@ class CSCQuota
       []
     end
 
-    private
-
     def ignore_duration
       ENV.fetch("OOD_CSC_QUOTA_IGNORE_TIME", 0).to_i
     end
+
+    private
 
     def ignored_quotas_file
       "#{Configuration.dataroot}/ignored_quotas.json"

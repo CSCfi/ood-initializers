@@ -31,11 +31,11 @@ class CSCBalance
       [e.to_s]
     end
 
-    private
-
     def ignore_duration
       ENV.fetch("OOD_CSC_BALANCE_IGNORE_TIME", 0).to_i
     end
+
+    private
 
     def ignored_balances
       raw = open(ignored_balances_file).read
