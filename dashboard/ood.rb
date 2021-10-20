@@ -38,11 +38,11 @@ NavConfig.categories=["Files", "Jobs", "Apps​", "Terminal", "Tools"]
 ENV["OOD_CSC_QUOTA_PATH"] = "/tmp/#{ENV["USER"]}_ood_quotas.json"
 ENV["OOD_CSC_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json"
 
-ENV["OOD_CSC_QUOTA_IGNORE_TIME"] = "14"
-ENV["OOD_CSC_BALANCE_IGNORE_TIME"] = "14"
+ENV["OOD_CSC_QUOTA_IGNORE_TIME"] = ENV.fetch("OOD_CSC_QUOTA_IGNORE_TIME", "14")
+ENV["OOD_CSC_BALANCE_IGNORE_TIME"] = ENV.fetch("OOD_CSC_BALANCE_IGNORE_TIME", "14")
 
-ENV["ENABLE_NATIVE_VNC"] = "yes"
-ENV["OOD_NATIVE_VNC_LOGIN_HOST"] = "puhti.csc.fi"
+ENV["ENABLE_NATIVE_VNC"] = ENV.fetch("ENABLE_NATIVE_VNC", "yes")
+ENV["OOD_NATIVE_VNC_LOGIN_HOST"] = ENV.fetch("OOD_NATIVE_VNC_LOGIN_HOST", "puhti.csc.fi")
 
 ENV["SLURM_OOD_ENV"] = case ENV["CSC_OOD_ENVIRONMENT"]
                        when "production"
