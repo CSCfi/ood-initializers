@@ -10,7 +10,7 @@ class CSCAppSessionInfo
       <<-EOF
 If you run into issues, please include the following log file in the support ticket: 
 <a target="_blank" 
-href="#{OodAppkit.files.url(path: session.output_file)}">output.log
+href="#{OodAppkit.files.url(path: session.output_file)}">#{File.basename(session.output_file)}
 </a>
       EOF
     end
