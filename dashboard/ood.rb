@@ -3,6 +3,7 @@
 
 require_relative "./balance.rb"
 require_relative "./quota.rb"
+require_relative "./app_session_info.rb"
 
 OodFilesApp.candidate_favorite_paths.tap do |paths|
   # Add each user's project projappl and scratch directories to the
