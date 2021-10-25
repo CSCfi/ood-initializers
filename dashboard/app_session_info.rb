@@ -80,7 +80,6 @@ href="#{OodAppkit.files.url(path: session.output_file)}">output.log
         "Log file for job does not exist"
       end
     end
-
   end
 
 end
