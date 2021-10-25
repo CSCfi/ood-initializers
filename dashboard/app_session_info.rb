@@ -5,16 +5,16 @@ class CSCAppSessionInfo
   # Output a link to the log file for the session
   class << self
     def log_link(session)
-<<-EOF
+      <<-EOF
 If you run into issues, please include the following log file in the support ticket: 
 <a target="_blank" 
-href="#{OodAppkit.files.url(path: session.staged_root.join("output.log")).to_s}">output.log
+href="#{OodAppkit.files.url(path: session.output_file)}">output.log
 </a>
-EOF
+      EOF
     end
 
-    # Print resources allocated to a job
-    def resources_info(session)
+    # Print job information
+    def job_info(session)
       msg = ""
       info = session.info
       unless session.cache_completed
