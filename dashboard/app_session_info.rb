@@ -18,14 +18,31 @@ href="#{OodAppkit.files.url(path: session.output_file)}">#{File.basename(session
     # Print job information
     def job_info(session)
       msg = ""
-      info = session.info
       unless session.cache_completed
-        msg = <<-EOF
-<b>Project:</b> #{info.accounting_id}  
-<b>Partition:</b> #{info.queue_name}  
-<b>Cores:</b> #{info.procs}  
-<b>Memory:</b> #{info.native[:min_memory]}  
-        EOF
+        info = session.info
+        project = "<b>Project:</b> #{info.accounting_id}  \n" unless info.accounting_id == nil
+        partition = "<b>Partition:</b> #{info.queue_name}  \n" unless info.queue_name == nil
+        cores = "<b>Cores:</b> #{info.procs}  \n" unless info.procs == nil
+        memory = "<b>Memory:</b> #{info.native[:min_memory]}  \n" unless (info.native == nil || !info.native.key?(:min_memory))
+
+        # NVME and GPUs are only available by parsing native[:gres]
+        if info.native != nil && info.native.key?(:gres)
+          nvme = begin
+                   nvme_match = info.native[:gres].match(/nvme:(\d+)/)
+                   nvme_match[1] unless nvme_match == nil
+                 end
+          gpus = begin
+                   gpu_match = info.native[:gres].match(/gpu:(.+):(\d+)/)
+                   if gpu_match != nil
+                     gpu_type = gpu_match[1]
+                     gpus = gpu_match[2]
+                     {:type => gpu_type, :amount => gpus}
+                   end
+                 end
+          nvme_string = "<b>Local disk:</b> #{nvme} GB  \n" unless nvme == nil
+          gpu_string = "<b>GPUs (#{gpus[:type]}):</b> #{gpus[:amount]}  \n" if (gpus != nil && gpus[:amount] != "0")
+        end
+        msg = "#{project}#{partition}#{cores}#{memory}#{nvme_string}#{gpu_string}"
       end
       msg
     end
@@ -64,13 +81,13 @@ href="#{OodAppkit.files.url(path: session.output_file)}">#{File.basename(session
         # Slurm time limit
         if lines.include?("DUE TO TIME LIMIT")
           "Job exceeded time limit"
-        # Slurm memory limit
+          # Slurm memory limit
         elsif lines.include?("Exceeded job memory limit")
           "Job exceeded memory limit"
-        # Cancel via scancel
+          # Cancel via scancel
         elsif lines.include?("CANCELLED AT")
           "Job was cancelled"
-        # App didn't launch in the time specified in after.sh
+          # App didn't launch in the time specified in after.sh
         elsif lines.include?("Timed out waiting")
           "Job took too long to start"
         else
