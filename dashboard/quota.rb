@@ -11,9 +11,8 @@ class CSCQuota
   class << self
 
     def get
-      @quotas ||= begin
-                    CSCQuota.find(ENV["OOD_CSC_QUOTA_PATH"], OodSupport::User.new.name)
-                  end
+      @last_update = Time.new
+      CSCQuota.find(ENV["OOD_CSC_QUOTA_PATH"], OodSupport::User.new.name)
     end
 
     # Get quota objects only for requested user in JSON file(s)
@@ -36,7 +35,32 @@ class CSCQuota
       []
     end
 
+    def ignore_duration
+      ENV.fetch("OOD_CSC_QUOTA_IGNORE_TIME", 0).to_i
+    end
+
     private
+
+    def ignored_quotas_file
+      "#{Configuration.dataroot}/ignored_quotas.json"
+    end
+
+    def ignored_quotas
+      raw = open(ignored_quotas_file).read
+      raise Error("Error reading ignored quotas") if raw.nil? || raw.empty?
+      json = JSON.parse(raw)
+      raise Error("Invalid JSON in ignored quotas") unless json.is_a?(Array)
+
+      json
+    rescue StandardError => e
+      []
+    end
+
+    def ignore_quota?(quota, ignored)
+      ignored.any? { |q|
+        quota.path.to_s == q["path"] && quota.resource_type == q["type"] && ( ignore_duration == 0 || @last_update < Time.at(q["timestamp"].to_i/1000) + ignore_duration.days)
+      }
+    end
 
     # Parse JSON object using version 1 formatting
     def build_quotas(quota_hashes, updated_at, user)
@@ -44,7 +68,8 @@ class CSCQuota
       quota_hashes.each do |quota|
         q += create_both_quota_types(quota.merge("updated_at" => quota.fetch("timestamp", updated_at))) if user == quota["user"]
       end
-      q
+      ignored = ignored_quotas
+      q.reject { |e| ignore_quota?(e, ignored) }
     end
 
     def create_both_quota_types(params)
