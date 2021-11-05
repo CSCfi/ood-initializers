@@ -3,7 +3,6 @@
 
 require_relative "./balance.rb"
 require_relative "./quota.rb"
-require_relative "./app_session_info.rb"
 
 OodFilesApp.candidate_favorite_paths.tap do |paths|
   # Add each user's project projappl and scratch directories to the
@@ -31,19 +30,13 @@ def OodAppGroup.groups_for(apps: [], group_by: :category, nav_limit: nil)
 end
 
 NavConfig.categories_whitelist=true
-
-# Apps category has an invisible space character to differentiate it from the normal OOD Apps category
 NavConfig.categories=["Files", "Jobs", "Apps​", "Terminal", "Tools"]
 
 # Add quota and balance file path for the user
 ENV["OOD_CSC_QUOTA_PATH"] = "/tmp/#{ENV["USER"]}_ood_quotas.json"
 ENV["OOD_CSC_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json"
-
-ENV["OOD_CSC_QUOTA_IGNORE_TIME"] = ENV.fetch("OOD_CSC_QUOTA_IGNORE_TIME", "14")
-ENV["OOD_CSC_BALANCE_IGNORE_TIME"] = ENV.fetch("OOD_CSC_BALANCE_IGNORE_TIME", "14")
-
-ENV["ENABLE_NATIVE_VNC"] = ENV.fetch("ENABLE_NATIVE_VNC", "yes")
-ENV["OOD_NATIVE_VNC_LOGIN_HOST"] = ENV.fetch("OOD_NATIVE_VNC_LOGIN_HOST", "puhti.csc.fi")
+ENV["ENABLE_NATIVE_VNC"] = "yes"
+ENV["OOD_NATIVE_VNC_LOGIN_HOST"] = "puhti.csc.fi"
 
 ENV["SLURM_OOD_ENV"] = case ENV["CSC_OOD_ENVIRONMENT"]
                        when "production"
