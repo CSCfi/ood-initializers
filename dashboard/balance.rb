@@ -8,8 +8,9 @@ class CSCBalance
   class << self
 
     def get
-      @last_update = Time.new
-      @balances = CSCBalance.find(ENV["OOD_CSC_BALANCE_PATH"])
+      @balances ||= begin
+                      CSCBalance.find("#{ENV["OOD_CSC_BALANCE_PATH"]}")
+                    end
     end
     # Get balance objects only for requested user in JSON file(s)
     #
@@ -31,32 +32,7 @@ class CSCBalance
       [e.to_s]
     end
 
-    def ignore_duration
-      ENV.fetch("OOD_CSC_BALANCE_IGNORE_TIME", 0).to_i
-    end
-
     private
-
-    def ignored_balances
-      raw = open(ignored_balances_file).read
-      raise Error("Error reading ignored balances") if raw.nil? || raw.empty?
-      json = JSON.parse(raw)
-      raise Error("Invalid JSON in ignored balances") unless json.is_a?(Array)
-
-      json
-      rescue StandardError => e
-        []
-    end
-
-    def ignored_balances_file
-      "#{Configuration.dataroot}/ignored_balances.json"
-    end
-
-    def ignore_balance?(balance, ignored)
-      ignored.any? { |b|
-        balance.project.to_s == b["project"] && ( ignore_duration == 0 || @last_update < Time.at(b["timestamp"].to_i/1000) + ignore_duration.days)
-      }
-    end
 
     # Parse JSON object using version 1 formatting
     def build_balances(balance_hashes, updated_at)
@@ -70,8 +46,7 @@ class CSCBalance
           updated_at: Time.at(updated_at.to_i),
         )
       end
-      ignored = ignored_balances
-      balances.reject { |b| ignore_balance?(b, ignored) }
+      balances
     end
   end
 
