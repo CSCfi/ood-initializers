@@ -1,4 +1,4 @@
-<div class="notification notification-warning" data-path="<%= quota.path -%>" data-type="<%= quota.resource_type -%>">
+<div class="notification notification-warning" data-path="<%= quota.path -%>" data-type="<%= quota.resource_type -%>" <%== 'style="display: none;"' if quota.hide -%>>
   <i class="fas fa-exclamation-triangle notification-icon"></i>
   <div class="notification-content">
     <div class="d-flex justify-content-between">

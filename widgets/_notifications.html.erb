@@ -73,6 +73,12 @@
     .warnings .notification:not(:last-child) {
         border-bottom: 2px solid #595959;
       }
+    .warnings {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 15px;
+      }
   `;
   document.head.appendChild(style);
 </script>
@@ -100,10 +106,20 @@
         });
     }
 
+  function deleteQuotaFiles(callback) {
+      $.ajax({url: "/pun/sys/dashboard/transfers.json",
+          type: "POST",
+          contentType: "text/plain",
+          data: JSON.stringify({"command": "rm", "files": ["<%= Configuration.dataroot -%>/ignored_quotas.json", "<%= Configuration.dataroot -%>/ignored_balances.json"]}),
+          success: callback
+        });
+    }
+
   function hideQuotaWarning(path, quotaType) {
       function hideWarning() {
           const warning = $("#notifications").find(`div[data-path="${path}"][data-type="${quotaType}"]`).first();
           warning.hide();
+          updateShowAllWarningsText();
         }
 
       const file = `${basePath}/ignored_quotas.json`
@@ -126,6 +142,7 @@
       function hideWarning() {
           const warning = $("#notifications").find(`div[data-project="${project}"]`).first();
           warning.hide();
+          updateShowAllWarningsText();
         }
 
       const file = `${basePath}/ignored_balances.json`
@@ -143,6 +160,31 @@
               }
           });
     }
+
+  function showAllWarnings() {
+      deleteQuotaFiles( () => {
+          const warnings = $("#notifications").find(".notification-warning");
+          warnings.each(function() {
+              $(this).show();
+            });
+          updateShowAllWarningsText();
+        });
+    }
+
+  function updateShowAllWarningsText() {
+      const warnings = $("#notifications").find(".notification-warning:hidden").length;
+      const button = $("#show_all_warnings");
+      if (warnings == 0) {
+          button.hide();
+        } else {
+            button.html(`Show all hidden warnings (${warnings} warnings)`);
+            button.show();
+          }
+    }
+
+  $(document).ready(function() {
+      updateShowAllWarningsText();
+    });
 </script>
 
 <div class="notifications" id="notifications" style="height: 100px">
@@ -157,6 +199,7 @@
     <% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>
       <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} %>
     <% end %>
+    <button type="button" class="btn btn-outline-secondary" id="show_all_warnings" onClick="showAllWarnings()">Show all hidden warnings</button>
   </div>
 </div>
 
