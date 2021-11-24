@@ -1,13 +1,16 @@
-<div class="notification notification-warning">
+<div class="notification notification-warning" data-path="<%= quota.path -%>" data-type="<%= quota.resource_type -%>" <%== 'style="display: none;"' if quota.hide -%>>
   <i class="fas fa-exclamation-triangle notification-icon"></i>
   <div class="notification-content">
-    <h5 class="notification-title">Quota warning for <%= link_to OodAppkit.files.url(path: quota.path).to_s, class: "", target: "_blank" do -%>
-      <%= quota.path %>
-    <% end %>
+    <div class="d-flex justify-content-between">
+      <h5 class="notification-title">Quota warning for <%= link_to OodAppkit.files.url(path: quota.path).to_s, class: "", target: "_blank" do -%>
+        <%= quota.path %>
+      <% end %>
+      </h5>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="hideQuotaWarning('<%= quota.path -%>', '<%= quota.resource_type -%>')" title="Hide warning <% if CSCQuota.ignore_duration == 0 %>forever<% else %>for <%= CSCQuota.ignore_duration -%> day<%= CSCQuota.ignore_duration > 1 ? "s" : "" -%><% end %>"><i class="fas fa-eye-slash"></i> Hide</button>
 
-    </h5>
+    </div>
     <p class="notification-message">
-    <p class="notification-message"><%= quota.to_s %></p>
+    <%= quota.to_s %>
     <%= render( partial: "widgets/progress_bar", locals: { percent: quota.percent_total_usage }) %>
     </p>
   </div>

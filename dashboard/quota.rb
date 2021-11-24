@@ -3,7 +3,7 @@ class CSCQuota
 
   BLOCK_SIZE = 1024
 
-  attr_reader :type, :path, :resource_type, :user_usage, :total_usage, :limit, :updated_at
+  attr_reader :type, :path, :resource_type, :user_usage, :total_usage, :limit, :updated_at, :hide
 
   # for number_to_human_size & number_to_human
   include ActionView::Helpers::NumberHelper
@@ -11,9 +11,8 @@ class CSCQuota
   class << self
 
     def get
-      @quotas ||= begin
-                    CSCQuota.find(ENV["OOD_CSC_QUOTA_PATH"], OodSupport::User.new.name)
-                  end
+      @last_update = Time.new
+      CSCQuota.find(ENV["OOD_CSC_QUOTA_PATH"], OodSupport::User.new.name)
     end
 
     # Get quota objects only for requested user in JSON file(s)
@@ -32,22 +31,47 @@ class CSCQuota
       # so assume version is 1
       build_quotas(json["quotas"], json["timestamp"], user)
     rescue StandardError => e
-      Rails.logger.error("Error #{e.class} when reading and parsing quota file #{quota_path} for user #{user}: #{e.message}")
       []
+    end
+
+    def ignore_duration
+      ENV.fetch("OOD_CSC_QUOTA_IGNORE_TIME", 0).to_i
     end
 
     private
 
+    def ignored_quotas_file
+      "#{Configuration.dataroot}/ignored_quotas.json"
+    end
+
+    def ignored_quotas
+      raw = open(ignored_quotas_file).read
+      raise Error("Error reading ignored quotas") if raw.nil? || raw.empty?
+      json = JSON.parse(raw)
+      raise Error("Invalid JSON in ignored quotas") unless json.is_a?(Array)
+
+      json
+    rescue StandardError
+      []
+    end
+
+    def ignore_quota?(path, resource_type, ignored)
+      ignored.any? { |q|
+        path.to_s == q["path"] && resource_type == q["type"] && ( ignore_duration == 0 || @last_update < Time.at(q["timestamp"].to_i/1000) + ignore_duration.days)
+      }
+    end
+
     # Parse JSON object using version 1 formatting
     def build_quotas(quota_hashes, updated_at, user)
       q = []
+      ignore_list = ignored_quotas
       quota_hashes.each do |quota|
-        q += create_both_quota_types(quota.merge("updated_at" => quota.fetch("timestamp", updated_at))) if user == quota["user"]
+        q += create_both_quota_types(ignore_list, quota.merge("updated_at" => quota.fetch("timestamp", updated_at))) if user == quota["user"]
       end
       q
     end
 
-    def create_both_quota_types(params)
+    def create_both_quota_types(ignore_list, params)
       params = params.to_h.compact.symbolize_keys
       file_quota = CSCQuota.new(
         type:   params.fetch(:type, :user).to_sym,
@@ -59,6 +83,7 @@ class CSCQuota
         limit: params.fetch(:file_limit).to_i,
         grace: params.fetch(:file_grace, 0).to_i, # future functionality
         updated_at: Time.at(params.fetch(:updated_at).to_i),
+        hide: ignore_quota?(Pathname.new(params.fetch(:path).to_s), "file", ignore_list),
       )
       block_quota = CSCQuota.new(
         type:   params.fetch(:type, :user).to_sym,
@@ -70,6 +95,7 @@ class CSCQuota
         limit: params.fetch(:block_limit).to_i,
         grace: params.fetch(:block_grace, 0).to_i, # future functionality
         updated_at: Time.at(params.fetch(:updated_at).to_i),
+        hide: ignore_quota?(Pathname.new(params.fetch(:path).to_s), "block", ignore_list),
       )
       [file_quota, block_quota]
     end
@@ -98,6 +124,7 @@ class CSCQuota
     set_limit(params)
     @grace = params.fetch(:grace).to_i # future functionality
     @updated_at = Time.at(params.fetch(:updated_at).to_i)
+    @hide = params.fetch(:hide)
   end
 
   def limit_invalid?(limit)

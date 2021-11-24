@@ -16,7 +16,7 @@ dashboard_layout:
         widgets:
           - pinned_apps
 pinned_apps:
-  - "sys/shell"
+  - "sys/ood-persistent-ssh"
   - "sys/files"
   - "sys/ood-rclone"
   - "sys/ood-base-jupyter"

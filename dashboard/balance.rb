@@ -1,16 +1,15 @@
 class CSCBalance
   class InvalidBalanceFile < StandardError; end
 
-  attr_reader :project, :value, :maxvalue, :updated_at
+  attr_reader :project, :value, :maxvalue, :updated_at, :hide
 
   include ActionView::Helpers::NumberHelper
 
   class << self
 
     def get
-      @balances ||= begin
-                      CSCBalance.find("#{ENV["OOD_CSC_BALANCE_PATH"]}")
-                    end
+      @last_update = Time.new
+      @balances = CSCBalance.find(ENV["OOD_CSC_BALANCE_PATH"])
     end
     # Get balance objects only for requested user in JSON file(s)
     #
@@ -27,16 +26,41 @@ class CSCBalance
       # until we have more than one balance version schema, which we do not
       # so assume version is 1
       build_balances(json["balances"], json["timestamp"])
-    rescue StandardError => e
-      Rails.logger.error("Error #{e.class} when reading and parsing balance file #{balance_path} for user #{user}: #{e.message}")
-      [e.to_s]
+    rescue StandardError
+      []
+    end
+
+    def ignore_duration
+      ENV.fetch("OOD_CSC_BALANCE_IGNORE_TIME", 0).to_i
     end
 
     private
 
+    def ignored_balances
+      raw = open(ignored_balances_file).read
+      raise Error("Error reading ignored balances") if raw.nil? || raw.empty?
+      json = JSON.parse(raw)
+      raise Error("Invalid JSON in ignored balances") unless json.is_a?(Array)
+
+      json
+      rescue StandardError
+        []
+    end
+
+    def ignored_balances_file
+      "#{Configuration.dataroot}/ignored_balances.json"
+    end
+
+    def ignore_balance?(project, ignored)
+      ignored.any? { |b|
+        project.to_s == b["project"] && ( ignore_duration == 0 || @last_update < Time.at(b["timestamp"].to_i/1000) + ignore_duration.days)
+      }
+    end
+
     # Parse JSON object using version 1 formatting
     def build_balances(balance_hashes, updated_at)
       balances = []
+      ignored_list = ignored_balances
       balance_hashes.each do |balance|
         balance = balance.to_h.compact.symbolize_keys
         balances << CSCBalance.new(
@@ -44,6 +68,7 @@ class CSCBalance
           value: balance.fetch(:value).to_i,
           maxvalue: balance.fetch(:maxvalue).to_i,
           updated_at: Time.at(updated_at.to_i),
+          hide: ignore_balance?(balance.fetch(:project, nil).to_s, ignored_list)
         )
       end
       balances
@@ -60,6 +85,7 @@ class CSCBalance
     @value = params.fetch(:value).to_i
     @maxvalue = params.fetch(:maxvalue).to_i
     @updated_at = Time.at(params.fetch(:updated_at).to_i)
+    @hide = params.fetch(:hide)
   end
 
   def limited?

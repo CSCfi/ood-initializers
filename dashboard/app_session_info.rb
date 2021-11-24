@@ -47,17 +47,78 @@ href="#{OodAppkit.files.url(path: session.output_file)}">#{File.basename(session
       msg
     end
 
+    # Print seff information
+    def seff_stats(session)
+      msg = ""
+      job_id = session.instance_variable_get(:@job_id)
+      if session.cache_completed && job_id != nil
+        seff_output = get_cached_seff(session)
+        msg = seff_wrapper(seff_output, job_id)
+      end
+      msg
+    end
+
     # Returns the reason why a job exited
     def exit_reason(session)
-      sanitizer ||= Rails::Html::FullSanitizer.new
       if session.cache_completed
-        sanitizer.sanitize(get_exit_reason(session))
+        self.sanitizer.sanitize(get_exit_reason(session))
       else
         ""
       end
     end
 
     private
+
+    def seff_wrapper(seff_output, job_id)
+      output = <<-EOF
+<div>
+  <button
+    class="btn btn-primary"
+    type="button"
+    data-toggle="collapse"
+    data-target="#seff_stats_#{job_id}"
+    aria-expanded="false"
+    aria-controls="seff_stats_#{job_id}"
+    id="toggle_stats_#{job_id}"
+  >
+    Show job stats
+  </button>
+  <div class="collapse" id="seff_stats_#{job_id}">
+    <p>#{seff_output.lines.join("<br>")}</p>
+  </div>
+  <script>
+    $("#toggle_stats_#{job_id}").click(function() {
+      $(this).text(function(i, old_text) {
+        return old_text.includes("Show") ? "Hide job stats" : "Show job stats"
+      });
+    });
+  </script>
+</div>
+      EOF
+      output
+    end
+
+    def get_cached_seff(session)
+      seff_cache_file = session.staged_root.join("seff_cache")
+      if File.exists?(seff_cache_file)
+        File.open(seff_cache_file).read
+      else
+        seff_output = get_seff_output(session.instance_variable_get(:@job_id))
+        File.open(seff_cache_file, 'w') { |file| file.write(seff_output)}
+        seff_output
+      end
+    rescue IOError
+      "Error reading or saving cached job statistics"
+    end
+
+    def get_seff_output(jobid)
+      stdout_str, stderr_str, status = Open3.capture3("seff", jobid)
+      if status.success?
+        stdout_str
+      else
+        "Error getting job efficiency statistics, #{stderr_str}"
+      end
+    end
 
     # Get the cached exit reason or parse from log file if cached doesn't exist
     def get_exit_reason(session)
@@ -96,6 +157,10 @@ href="#{OodAppkit.files.url(path: session.output_file)}">#{File.basename(session
       else
         "Log file for job does not exist"
       end
+    end
+
+    def sanitizer
+      sanitizer ||= Rails::Html::FullSanitizer.new
     end
   end
 
