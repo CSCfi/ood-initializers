@@ -10,8 +10,8 @@ OodFilesApp.candidate_favorite_paths.tap do |paths|
   # file app as links.
   projects = User.new.groups.map(&:name)
   # Assuming that the directories are named like the projects.
-  paths.concat projects.map { |p| FavoritePath.new("/projappl/#{p}") }
-  paths.concat projects.map { |p| FavoritePath.new("/scratch/#{p}") }
+  paths.concat projects.filter_map { |p| FavoritePath.new(File.realpath("/projappl/#{p}")) if File.exist?("/projappl/#{p}") }
+  paths.concat projects.filter_map { |p| FavoritePath.new(File.realpath("/scratch/#{p}")) if File.exist?("/scratch/#{p}") }
 end
 
 # Based on https://discourse.osc.edu/t/set-order-of-interactive-apps-menu-items/1271

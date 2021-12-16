@@ -20,3 +20,4 @@ pinned_apps:
   - "sys/files"
   - "sys/ood-rclone"
   - "sys/ood-base-jupyter"
+pinned_apps_menu_length: 0
