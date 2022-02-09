@@ -67,3 +67,8 @@ ENV["OOD_QUOTA_THRESHOLD"] = ENV.fetch("OOD_QUOTA_THRESHOLD", "0.9")
 ENV["OOD_BALANCE_THRESHOLD"] = ENV.fetch("OOD_BALANCE_THRESHOLD", "0.1")
 # Update quota and balance JSON files in tmp, set BU limit to 5%
 system({"LD_LIBRARY_PATH" => "/ood/deps/lib:#{ENV["LD_LIBRARY_PATH"]}"}, "/ood/deps/soft/csc-projects", "-b", "#{ENV["OOD_CSC_BALANCE_PATH"]}", "-q", "#{ENV["OOD_CSC_QUOTA_PATH"]}")
+
+if ENV["SSH_KEYGEN_SCRIPT"] != nil
+  system("test -x #{ENV['SSH_KEYGEN_SCRIPT']} &&  #{ENV['SSH_KEYGEN_SCRIPT']}" )
+end
+
