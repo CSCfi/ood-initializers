@@ -14,6 +14,10 @@ dashboard_layout:
     - columns:
       - width: 12
         widgets:
+          - grafana
+    - columns:
+      - width: 12
+        widgets:
           - pinned_apps
 pinned_apps:
   - "sys/ood-persistent-ssh"
