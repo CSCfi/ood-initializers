@@ -1,0 +1,103 @@
+<script>
+  function setNotificationsHeight() {
+    let motd = $(".motd").first();
+    let notifications = $("#notifications");
+    if (motd && notifications) {
+        notifications.height(motd.height());
+      }
+  }
+  setNotificationsHeight();
+  $(window).resize(setNotificationsHeight);
+</script>
+<script>
+  const basePath = "/pun/sys/dashboard/files/fs/<%= Configuration.dataroot -%>";
+
+  function updateFile(file, content, callback) {
+      $.ajax({url: file,
+          type: "PUT",
+          contentType: "text/plain",
+          data: content,
+          success: callback
+        });
+    }
+
+  function deleteQuotaFiles(callback) {
+      $.ajax({url: "/pun/sys/dashboard/transfers.json",
+          type: "POST",
+          contentType: "text/plain",
+          data: JSON.stringify({"command": "rm", "files": ["<%= Configuration.dataroot -%>/ignored_quotas.json", "<%= Configuration.dataroot -%>/ignored_balances.json"]}),
+          success: callback
+        });
+    }
+
+  function hideQuotaWarning(path, quotaType) {
+      function hideWarning() {
+          const warning = $("#notifications").find(`div[data-path="${path}"][data-type="${quotaType}"]`).first();
+          warning.hide();
+          updateShowAllWarningsText();
+        }
+
+      const file = `${basePath}/ignored_quotas.json`
+      const newQuota = {path: path, type: quotaType, timestamp: Date.now()};
+      $.getJSON(file)
+        .done(function(data) {
+            const newData = data["error_message"] == null ? data.filter( q => !(q.path == path && q.type == quotaType) ) : [];
+            newData.push(newQuota);
+            updateFile(file, JSON.stringify(newData), hideWarning);
+          })
+        .fail(function(jqXhr, textStatus, error) {
+            if (error.name === "SyntaxError") {
+                const newData = [newQuota];
+                updateFile(file, JSON.stringify(newData), hideWarning);
+              }
+          });
+    }
+
+  function hideBalanceWarning(project) {
+      function hideWarning() {
+          const warning = $("#notifications").find(`div[data-project="${project}"]`).first();
+          warning.hide();
+          updateShowAllWarningsText();
+        }
+
+      const file = `${basePath}/ignored_balances.json`
+      const newBalance = {project: project, timestamp: Date.now()};
+      $.getJSON(file)
+        .done(function(data) {
+            const newData = data["error_message"] == null ? data.filter( q => q.project != project ) : [];
+            newData.push(newBalance);
+            updateFile(file, JSON.stringify(newData), hideWarning);
+          })
+        .fail(function(jqXhr, textStatus, error) {
+            if (error.name === "SyntaxError") {
+                const newData = [newBalance];
+                updateFile(file, JSON.stringify(newData), hideWarning);
+              }
+          });
+    }
+
+  function showAllWarnings() {
+      deleteQuotaFiles( () => {
+          const warnings = $("#notifications").find(".notification-warning");
+          warnings.each(function() {
+              $(this).show();
+            });
+          updateShowAllWarningsText();
+        });
+    }
+
+  function updateShowAllWarningsText() {
+      const warnings = $("#notifications").find(".notification-warning:hidden").length;
+      const button = $("#show_all_warnings");
+      if (warnings == 0) {
+          button.hide();
+        } else {
+            button.html(`Show all hidden warnings (${warnings} warnings)`);
+            button.show();
+          }
+    }
+
+  (function() {
+      updateShowAllWarningsText();
+  })();
+</script>

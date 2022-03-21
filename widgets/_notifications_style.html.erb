@@ -1,0 +1,84 @@
+<script>
+  const style = document.createElement('style');
+  style.textContent = `
+     .notification {
+        padding: 10px;
+        margin: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 10px;
+      }
+    .notification-warning {
+        border-color: #ffab7f;
+      }
+    .notification-warning .progress-bar {
+        background-color: #002f5f;
+      }
+    .notification-info {
+        border-color: #7fb2bb;
+      }
+    .notification-error {
+        border-color: #b90729;
+      }
+    .notification-title {
+        color: #595959;
+        font-weight: 600;
+        font-size: 16px;
+      }
+    .notification-title a {
+        color: #595959;
+        text-decoration: underline;
+      }
+    .notification-message {
+        font-size: 16px;
+      }
+    .notification-content {
+        width: 100%;
+      }
+    .notification-icon {
+        padding: 10px;
+      }
+    .notification-info .notification-icon {
+        color: #006779;
+      }
+    .notification-warning .notification-icon {
+        color: #e6bf12;
+      }
+    .notification-error .notification-icon {
+        color: #b90729;
+      }
+    .notifications {
+        overflow-y: auto;
+        border-radius: 6px;
+        box-shadow: rgb(0 0 0 / 15%) 0px 10px 20px, rgb(0 0 0 / 20%) 0px 5px 5px;
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+    .title-underline {
+        width: 44px;
+        height: 4px;
+        background-color: #006778;
+        margin-top: 10px;
+      }
+    .notification-title {
+        display: block;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: #595959;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+    .warnings .notification:not(:last-child) {
+        border-bottom: 2px solid #595959;
+      }
+    .warnings {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 15px;
+      }
+  `;
+  document.head.appendChild(style);
+</script>
