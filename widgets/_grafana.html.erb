@@ -21,6 +21,7 @@
           document.head.appendChild(grafana_style);
         })();
   </script>
+  <h3>Resource usage</h3>
   <div class="grafana-container">
     <% CSCGrafana.panels.each do |panel| -%>
       <iframe class="grafana-iframe" src="<%= CSCGrafana.grafana_url -%>?orgId=1&refresh=30s&from=now-<%= CSCGrafana.time_range -%>&to=now&theme=light&panelId=<%= panel -%>" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
