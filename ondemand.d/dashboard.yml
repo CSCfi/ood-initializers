@@ -22,6 +22,6 @@ dashboard_layout:
 pinned_apps:
   - "sys/ood-persistent-ssh"
   - "sys/files"
-  - "sys/ood-rclone"
   - "sys/ood-base-jupyter"
+  - "sys/ood-rstudio"
 pinned_apps_menu_length: 0
