@@ -17,12 +17,23 @@
                   flex-grow: 1;
                   height: 300px;
                 }
+            .grafana-title {
+                font-size: 14px;
+                text-transform: uppercase;
+                color: #595959;
+                font-weight: 500;
+                margin-bottom: 10px;
+                flex-basis: 100%;
+              }
           `;
           document.head.appendChild(grafana_style);
         })();
   </script>
-  <h3>Resource usage</h3>
   <div class="grafana-container">
+    <div class="grafana-title">
+      Resource usage
+      <div class="motd-title-underline"></div>
+    </div>
     <% CSCGrafana.panels.each do |panel| -%>
       <iframe class="grafana-iframe" src="<%= CSCGrafana.grafana_url -%>?orgId=1&refresh=30s&from=now-<%= CSCGrafana.time_range -%>&to=now&theme=light&panelId=<%= panel -%>" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
     <% end -%>
