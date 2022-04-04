@@ -9,9 +9,9 @@
       <button type="button" class="btn btn-outline-secondary btn-sm" onClick="hideQuotaWarning('<%= quota.path -%>', '<%= quota.resource_type -%>')" title="Hide warning <% if CSCQuota.ignore_duration == 0 %>forever<% else %>for <%= CSCQuota.ignore_duration -%> day<%= CSCQuota.ignore_duration > 1 ? "s" : "" -%><% end %>"><i class="fas fa-eye-slash"></i> Hide</button>
 
     </div>
-    <p class="notification-message">
-    <%= quota.to_s %>
-    <%= render( partial: "widgets/progress_bar", locals: { percent: quota.percent_total_usage }) %>
-    </p>
+    <div class="notification-message">
+      <p><%= quota.to_s %></p>
+      <%= render( partial: "widgets/progress_bar", locals: { percent: quota.percent_total_usage }) -%>
+    </div>
   </div>
 </div>

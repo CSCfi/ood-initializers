@@ -1,0 +1,40 @@
+<script>
+  (function (){
+    if (!styleExists()) {
+      addStyle();
+    }
+  })();
+  function styleExists() {
+    return $("#dashboard_style").length > 0;
+  };
+  function addStyle() {
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.id = "dashboard_style";
+    style.textContent = `
+       .dashboard-container {
+        border-radius: 6px;
+        box-shadow: rgb(0 0 0 / 15%) 0px 10px 20px, rgb(0 0 0 / 20%) 0px 5px 5px;
+        padding: 20px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        }
+    .dashboard-container-title {
+        display: block;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: #595959;
+        font-weight: 500;
+        margin-bottom: 10px;
+        flex-basis: 100%;
+      }
+    .dashboard-container-title-underline {
+        width: 44px;
+        height: 4px;
+        background-color: #006778;
+        margin-top: 10px;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+</script>

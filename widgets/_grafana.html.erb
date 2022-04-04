@@ -4,38 +4,22 @@
           const grafana_style = document.createElement('style');
           grafana_style.textContent = `
             .grafana-container {
-                  border-radius: 6px;
-                  box-shadow: rgb(0 0 0 / 15%) 0px 10px 20px, rgb(0 0 0 / 20%) 0px 5px 5px;
-                  padding: 20px;
-                  margin-top: 10px;
-                  margin-bottom: 20px;
                   display: flex;
                   flex-wrap: wrap;
-                }
+            }
             .grafana-iframe {
                   flex-basis: 50%;
                   flex-grow: 1;
                   height: 300px;
-                }
-            .grafana-title {
-                font-size: 14px;
-                text-transform: uppercase;
-                color: #595959;
-                font-weight: 500;
-                margin-bottom: 10px;
-                flex-basis: 100%;
-              }
+            }
           `;
           document.head.appendChild(grafana_style);
         })();
   </script>
-  <div class="grafana-container">
-    <div class="grafana-title">
-      Resource usage
-      <div class="motd-title-underline"></div>
-    </div>
+  <%= render :layout => 'widgets/container', :locals => {:title => "Resource usage", :class => "grafana-container" } do %>
     <% CSCGrafana.panels.each do |panel| -%>
       <iframe class="grafana-iframe" src="<%= CSCGrafana.grafana_url -%>?orgId=1&refresh=30s&from=now-<%= CSCGrafana.time_range -%>&to=now&theme=light&panelId=<%= panel -%>" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
     <% end -%>
-  </div>
+  <% end %>
+  <%= render :partial => 'widgets/shared_style' %>
 <% end %>

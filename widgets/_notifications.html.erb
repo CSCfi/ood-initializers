@@ -1,18 +1,14 @@
-<div class="notifications" id="notifications" style="height: 100px">
-  <div class="notification-title">
-    Notifications
-    <div class="motd-title-underline"></div>
-  </div>
+<%= render :layout => 'widgets/container', :locals => {:title => "Notifications", :id => "notifications" } do %>
   <div class="warnings">
     <%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse.each do |quota| -%>
-      <%= render :partial => 'widgets/quota_notification', :locals => {:quota => quota} %>
+      <%= render :partial => 'widgets/quota_notification', :locals => {:quota => quota} -%>
     <%- end -%>
     <% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>
-      <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} %>
+      <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} -%>
     <% end %>
     <button type="button" class="btn btn-outline-secondary" id="show_all_warnings" onClick="showAllWarnings()">Show all hidden warnings</button>
   </div>
-</div>
-
+<% end %>
+<%= render :partial => 'widgets/shared_style' %>
 <%= render :partial => 'widgets/notifications_style' %>
 <%= render :partial => 'widgets/notifications_js' %>
