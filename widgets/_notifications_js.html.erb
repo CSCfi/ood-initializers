@@ -97,7 +97,25 @@
           }
     }
 
+  function addHideButtonHandlers() {
+      const buttons = $(".notification-hide-button");
+      buttons.each(function () {
+        const button = $(this);
+        const notification = button.closest(".notification");
+        const type = notification.data("notification-type");
+        if (type === "quota") {
+          const path = notification.data("path");
+          const resource_type = notification.data("type");
+          button.click(() => hideQuotaWarning(path, resource_type));
+        } else if (type === "balance") {
+          const project = notification.data("project");
+          button.click(() => hideBalanceWarning(project));
+        }
+      });
+    }
+
   (function() {
       updateShowAllWarningsText();
+      addHideButtonHandlers();
   })();
 </script>
