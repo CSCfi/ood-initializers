@@ -21,5 +21,4 @@
       <iframe class="grafana-iframe" src="<%= CSCGrafana.grafana_url -%>?orgId=1&refresh=30s&from=now-<%= CSCGrafana.time_range -%>&to=now&theme=light&panelId=<%= panel -%>" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
     <% end -%>
   <% end %>
-  <%= render :partial => 'widgets/shared_style' %>
 <% end %>

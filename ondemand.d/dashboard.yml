@@ -3,6 +3,7 @@ dashboard_layout:
     - columns:
       - width: 12
         widgets:
+          - shared_style
           - logo
     - columns:
       - width: 6
