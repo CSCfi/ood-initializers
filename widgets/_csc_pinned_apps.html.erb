@@ -1,0 +1,14 @@
+<script>
+  (function() {
+      const pinned_apps_style = document.createElement('style');
+      pinned_apps_style.textContent = `
+        #pinned_apps > h3:nth-child(2) {
+          display: none;
+        }
+      `;
+      document.head.appendChild(pinned_apps_style);
+    })();
+</script>
+<%= render :layout => 'widgets/container', :locals => {:title => "Pinned Apps", :id => "pinned_apps" } do %>
+  <%= render :partial => 'widgets/pinned_apps' %>
+<% end %>
