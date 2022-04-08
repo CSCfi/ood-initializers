@@ -18,7 +18,7 @@ dashboard_layout:
     - columns:
       - width: 12
         widgets:
-          - pinned_apps
+          - csc_pinned_apps
 pinned_apps:
   - "sys/ood-persistent-ssh"
   - "sys/files"
