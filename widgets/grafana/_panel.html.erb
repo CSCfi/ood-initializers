@@ -1,0 +1,1 @@
+<iframe class="grafana-iframe <%= local_assigns.fetch(:extra, false) ? "extra" : "" -%>" <%= local_assigns.fetch(:extra, false) ? "data-src" : "src"%>="<%= grafana_url -%>?orgId=1&refresh=30s&from=now-<%= time_range -%>&to=now&theme=light&panelId=<%= panel -%>" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>

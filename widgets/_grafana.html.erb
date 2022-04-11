@@ -1,24 +1,16 @@
 <% if CSCGrafana.enabled -%>
-  <script>
-    (function() {
-          const grafana_style = document.createElement('style');
-          grafana_style.textContent = `
-            .grafana-container {
-                  display: flex;
-                  flex-wrap: wrap;
-            }
-            .grafana-iframe {
-                  flex-basis: 50%;
-                  flex-grow: 1;
-                  height: 300px;
-            }
-          `;
-          document.head.appendChild(grafana_style);
-        })();
-  </script>
+  <% n_panels = 2 %>
+  <%= render :partial => 'widgets/grafana/style' %>
   <%= render :layout => 'widgets/container', :locals => {:title => "Resource usage", :class => "grafana-container" } do %>
-    <% CSCGrafana.panels.each do |panel| -%>
-      <iframe class="grafana-iframe" src="<%= CSCGrafana.grafana_url -%>?orgId=1&refresh=30s&from=now-<%= CSCGrafana.time_range -%>&to=now&theme=light&panelId=<%= panel -%>" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
-    <% end -%>
+    <%= render :partial => 'widgets/grafana/panel', :collection => CSCGrafana.panels.take(n_panels), :locals => {:grafana_url => CSCGrafana.grafana_url, :time_range => CSCGrafana.time_range } %>
+    <div class="extra-graphs">
+      <%= render :partial => 'widgets/grafana/panel', :collection => CSCGrafana.panels.drop(n_panels), :locals => {:grafana_url => CSCGrafana.grafana_url, :time_range => CSCGrafana.time_range, :extra => true } %>
+    </div>
+    <% if CSCGrafana.panels.length > n_panels %>
+      <div class="grafana-controls">
+        <i class="fas fa-angle-double-down" id="show-all-graphs" title="Show all graphs"></i>
+      </div>
+    <% end %>
   <% end %>
+  <%= render :partial => 'widgets/grafana/js' %>
 <% end %>
