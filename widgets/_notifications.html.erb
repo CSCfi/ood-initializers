@@ -1,11 +1,10 @@
+<% quotas = CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse %>
+<% balances = CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse %>
+
 <%= render :layout => 'widgets/container', :locals => {:title => "Notifications", :id => "notifications" } do %>
   <div class="warnings">
-    <%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse.each do |quota| -%>
-      <%= render :partial => 'widgets/notifications/quota', :locals => {:quota => quota} -%>
-    <%- end -%>
-    <% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>
-      <%= render :partial => 'widgets/notifications/balance', :locals => {:balance => balance} -%>
-    <% end %>
+    <%= render :partial => 'widgets/notifications/quota', :collection => quotas -%>
+    <%= render :partial => 'widgets/notifications/balance', :collection => balances -%>
     <button type="button" class="btn btn-outline-secondary" id="show_all_warnings" onClick="showAllWarnings()">Show all hidden warnings</button>
   </div>
 <% end %>
