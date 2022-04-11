@@ -7,7 +7,7 @@
     </div>
     <div class="notification-message">
       <p><%= balance.to_s %></p>
-      <%= render( partial: "widgets/progress_bar", locals: { percent: balance.percent_usage }) %>
+      <%= render( partial: "widgets/notifications/progress_bar", locals: { percent: balance.percent_usage }) %>
     </div>
   </div>
 </div>
