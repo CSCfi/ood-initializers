@@ -1,0 +1,13 @@
+<% link = pinned_app.links.first %>
+<div>
+  <%=
+    link_to(
+      link.url.to_s,
+      class: "custom-app-card",
+      target: link.new_tab? ? "_blank" : nil,
+    ) do
+  %>
+    <%= icon_tag(link.icon_uri) %>
+    <%= content_tag(:p, link.title) %>
+  <% end %>
+</div>

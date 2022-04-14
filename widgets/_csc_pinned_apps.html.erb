@@ -1,14 +1,46 @@
-<script>
-  (function() {
-      const pinned_apps_style = document.createElement('style');
-      pinned_apps_style.textContent = `
-        #pinned_apps > h3:nth-child(2) {
-          display: none;
-        }
-      `;
-      document.head.appendChild(pinned_apps_style);
-    })();
-</script>
-<%= render :layout => 'widgets/container', :locals => {:title => "Pinned Apps", :id => "pinned_apps" } do %>
-  <%= render :partial => 'widgets/pinned_apps' %>
+<% if pinned_apps? %>
+  <script>
+    (function() {
+        const pinned_apps_style = document.createElement('style');
+        pinned_apps_style.textContent = `
+          #pinned_apps {
+            --max-width: calc((100% - 60px) / 6);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(max(120px, var(--max-width)), 1fr));
+            grid-auto-rows; 1fr;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+          }
+          .custom-app-card {
+            color: #000;
+            border: 1px solid rgb(0,0,0,0.125);
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+          }
+          .custom-app-card p {
+            margin-bottom: 0;
+          }
+          .custom-app-card .app-icon {
+            height: 1.25em;
+            width: 1.25em;
+            font-size: 48px;
+          }
+          .custom-app-card:hover {
+            text-decoration: none;
+            border-color: #22527b;
+          }
+        `;
+        document.head.appendChild(pinned_apps_style);
+      })();
+  </script>
+  <%= render :layout => "widgets/container", :locals => { :title => "Pinned Apps" } do %>
+    <div id="pinned_apps">
+      <%= render :partial => "widgets/pinned_app", :collection => @pinned_apps %>
+    </div>
+  <% end %>
 <% end %>
