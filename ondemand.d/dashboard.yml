@@ -22,7 +22,15 @@ dashboard_layout:
           - csc_pinned_apps
 pinned_apps:
   - "sys/ood-persistent-ssh"
+  - "sys/ood-shell"
   - "sys/files"
+  - "sys/activejobs"
+  - "sys/ood-disk-quotas"
+  - "sys/ood-csc-status"
+  - "sys/ood-vnc"
   - "sys/ood-base-jupyter"
+  - "sys/ood-course-jupyter"
   - "sys/ood-rstudio"
+  - "sys/ood-tensorboard"
+  - "sys/ood-vscode"
 pinned_apps_menu_length: 0
