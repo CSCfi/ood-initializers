@@ -2,6 +2,9 @@
 <% balances = CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse %>
 
 <%= render :layout => 'widgets/container', :locals => {:title => "Notifications", :id => "notifications" } do %>
+  <% if quotas.length + balances.length == 0 %>
+    <p>You have no notifications.</p>
+  <% end %>
   <div class="warnings">
     <%= render :partial => 'widgets/notifications/quota', :collection => quotas -%>
     <%= render :partial => 'widgets/notifications/balance', :collection => balances -%>
