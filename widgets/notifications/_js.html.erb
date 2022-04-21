@@ -1,15 +1,4 @@
 <script>
-  function setNotificationsHeight() {
-    let motd = $("#motd");
-    let notifications = $("#notifications");
-    if (motd && notifications) {
-        notifications.height(motd.height());
-      }
-  }
-  setNotificationsHeight();
-  $(window).resize(setNotificationsHeight);
-</script>
-<script>
   const basePath = "/pun/sys/dashboard/files/fs/<%= Configuration.dataroot -%>";
 
   function updateFile(file, content, callback) {
