@@ -6,17 +6,9 @@ dashboard_layout:
           - shared_style
           - logo
           - csc_pinned_apps
-    - columns:
-      - width: 6
-        widgets:
-          - csc_motd
-      - width: 6
-        widgets:
           - notifications
-    - columns:
-      - width: 12
-        widgets:
           - grafana
+          - csc_motd
 pinned_apps:
   - "sys/ood-persistent-ssh"
   - "sys/ood-shell"
