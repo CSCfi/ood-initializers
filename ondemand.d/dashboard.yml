@@ -4,7 +4,6 @@ dashboard_layout:
       - width: 12
         widgets:
           - shared_style
-          - logo
           - csc_pinned_apps
           - notifications
           - grafana
