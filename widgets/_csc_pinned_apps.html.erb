@@ -43,4 +43,14 @@
       <%= render :partial => "widgets/pinned_app", :collection => @pinned_apps %>
     </div>
   <% end %>
+  <script>
+    (function() {
+      const app_cards = $(".custom-app-card");
+        app_cards.each(function() {
+          const icon = $(this).find(".app-icon").first();
+          const title = $(this).data("description");
+          icon.attr("title", title);
+        });
+      })();
+  </script>
 <% end %>
