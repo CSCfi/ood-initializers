@@ -35,3 +35,5 @@ en:
       requested time, number of cores, memory, local disk and number
       of GPUs are within the limits for the selected partition.
 
+    # Rename the pinned apps category to be able to hide it (default: Apps)
+    pinned_apps_category: 'Pinned Apps'
