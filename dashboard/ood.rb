@@ -33,8 +33,7 @@ end
 
 NavConfig.categories_whitelist=true
 
-# Apps category has an invisible space character to differentiate it from the normal OOD Apps category
-NavConfig.categories=["Files", "Jobs", "Apps​", "Terminal", "Tools"]
+NavConfig.categories=["Files", "Jobs", "Apps", "Terminal", "Tools"]
 
 # Add quota and balance file path for the user
 ENV["OOD_CSC_QUOTA_PATH"] = "/tmp/#{ENV["USER"]}_ood_quotas.json"
