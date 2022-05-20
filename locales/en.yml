@@ -34,6 +34,7 @@ en:
       Please verify that the selected project has BU left and the
       requested time, number of cores, memory, local disk and number
       of GPUs are within the limits for the selected partition.
+    quota_reload_message: ""
 
     # Rename the pinned apps category to be able to hide it (default: Apps)
     pinned_apps_category: 'Pinned Apps'
