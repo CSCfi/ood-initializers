@@ -1,15 +1,4 @@
 <script>
-  function setNotificationsHeight() {
-    let motd = $(".motd").first();
-    let notifications = $("#notifications");
-    if (motd && notifications) {
-        notifications.height(motd.height());
-      }
-  }
-  setNotificationsHeight();
-  $(window).resize(setNotificationsHeight);
-</script>
-<script>
   const basePath = "/pun/sys/dashboard/files/fs/<%= Configuration.dataroot -%>";
 
   function updateFile(file, content, callback) {
@@ -97,7 +86,25 @@
           }
     }
 
+  function addHideButtonHandlers() {
+      const buttons = $(".notification-hide-button");
+      buttons.each(function () {
+        const button = $(this);
+        const notification = button.closest(".notification");
+        const type = notification.data("notification-type");
+        if (type === "quota") {
+          const path = notification.data("path");
+          const resource_type = notification.data("type");
+          button.click(() => hideQuotaWarning(path, resource_type));
+        } else if (type === "balance") {
+          const project = notification.data("project");
+          button.click(() => hideBalanceWarning(project));
+        }
+      });
+    }
+
   (function() {
       updateShowAllWarningsText();
+      addHideButtonHandlers();
   })();
 </script>

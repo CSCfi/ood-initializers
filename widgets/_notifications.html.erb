@@ -1,18 +1,17 @@
-<div class="notifications" id="notifications" style="height: 100px">
-  <div class="notification-title">
-    Notifications
-    <div class="motd-title-underline"></div>
-  </div>
+<% quota_threshold = ENV.fetch("OOD_CSC_QUOTA_THRESHOLD").to_f %>
+<% balance_threshold = ENV.fetch("OOD_CSC_BALANCE_THRESHOLD").to_f %>
+<% quotas = CSCQuota.get.select{ |quota| quota.insufficient?(threshold: quota_threshold ) }.sort_by(&:percent_total_usage).reverse %>
+<% balances = CSCBalance.get.select{ |balance| balance.insufficient?(threshold: balance_threshold) }.sort_by(&:percent_usage).reverse %>
+
+<%= render :layout => 'widgets/container', :locals => {:title => "Notifications", :id => "notifications" } do %>
+  <% if quotas.length + balances.length == 0 %>
+    <p>You have no notifications.</p>
+  <% end %>
   <div class="warnings">
-    <%- CSCQuota.get.select{ |quota| quota.insufficient?(threshold: Configuration.quota_threshold ) }.sort_by(&:percent_total_usage).reverse.each do |quota| -%>
-      <%= render :partial => 'widgets/quota_notification', :locals => {:quota => quota} %>
-    <%- end -%>
-    <% CSCBalance.get.select{ |balance| balance.insufficient?(threshold: Configuration.balance_threshold) }.sort_by(&:percent_usage).reverse.each do |balance| %>
-      <%= render :partial => 'widgets/balance_notification', :locals => {:balance => balance} %>
-    <% end %>
+    <%= render :partial => 'widgets/notifications/quota', :collection => quotas -%>
+    <%= render :partial => 'widgets/notifications/balance', :collection => balances -%>
     <button type="button" class="btn btn-outline-secondary" id="show_all_warnings" onClick="showAllWarnings()">Show all hidden warnings</button>
   </div>
-</div>
-
-<%= render :partial => 'widgets/notifications_style' %>
-<%= render :partial => 'widgets/notifications_js' %>
+<% end %>
+<%= render :partial => 'widgets/notifications/style' %>
+<%= render :partial => 'widgets/notifications/js' %>

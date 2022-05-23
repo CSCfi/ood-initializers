@@ -1,41 +1,16 @@
 <% if CSCGrafana.enabled -%>
-  <script>
-    (function() {
-          const grafana_style = document.createElement('style');
-          grafana_style.textContent = `
-            .grafana-container {
-                  border-radius: 6px;
-                  box-shadow: rgb(0 0 0 / 15%) 0px 10px 20px, rgb(0 0 0 / 20%) 0px 5px 5px;
-                  padding: 20px;
-                  margin-top: 10px;
-                  margin-bottom: 20px;
-                  display: flex;
-                  flex-wrap: wrap;
-                }
-            .grafana-iframe {
-                  flex-basis: 50%;
-                  flex-grow: 1;
-                  height: 300px;
-                }
-            .grafana-title {
-                font-size: 14px;
-                text-transform: uppercase;
-                color: #595959;
-                font-weight: 500;
-                margin-bottom: 10px;
-                flex-basis: 100%;
-              }
-          `;
-          document.head.appendChild(grafana_style);
-        })();
-  </script>
-  <div class="grafana-container">
-    <div class="grafana-title">
-      Resource usage
-      <div class="motd-title-underline"></div>
+  <% n_panels = 2 %>
+  <%= render :partial => 'widgets/grafana/style' %>
+  <%= render :layout => 'widgets/container', :locals => {:title => "Resource usage", :class => "grafana-container" } do %>
+    <%= render :partial => 'widgets/grafana/panel', :collection => CSCGrafana.panels.take(n_panels), :locals => {:grafana_url => CSCGrafana.grafana_url, :time_range => CSCGrafana.time_range } %>
+    <div class="extra-graphs">
+      <%= render :partial => 'widgets/grafana/panel', :collection => CSCGrafana.panels.drop(n_panels), :locals => {:grafana_url => CSCGrafana.grafana_url, :time_range => CSCGrafana.time_range, :extra => true } %>
     </div>
-    <% CSCGrafana.panels.each do |panel| -%>
-      <iframe class="grafana-iframe" src="<%= CSCGrafana.grafana_url -%>?orgId=1&refresh=30s&from=now-<%= CSCGrafana.time_range -%>&to=now&theme=light&panelId=<%= panel -%>" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
-    <% end -%>
-  </div>
+    <% if CSCGrafana.panels.length > n_panels %>
+      <div class="grafana-controls">
+        <i class="fas fa-angle-double-down" id="show-all-graphs" title="Show all graphs"></i>
+      </div>
+    <% end %>
+  <% end %>
+  <%= render :partial => 'widgets/grafana/js' %>
 <% end %>

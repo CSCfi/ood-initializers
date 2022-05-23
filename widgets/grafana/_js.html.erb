@@ -1,0 +1,48 @@
+<script>
+  function toggleExtraGraphs() {
+      const ANIMATION_TIME = 200;
+      const graphs = $(".extra-graphs > .grafana-iframe");
+      graphs.each(function () {
+          loadGraph($(this));
+      });
+      const extra = $(".extra-graphs");
+      fixExpandButton(!graphsVisible());
+      // Hiding elements using .hide() causes Grafana to break, need to use the .hidden class
+      // temporarily use hide/show to make animations work
+      if (graphsVisible()) {
+          extra.slideUp(ANIMATION_TIME, () => {extra.addClass("hidden"); extra.show()});
+      } else {
+        extra.hide();
+        extra.removeClass("hidden");
+        extra.slideDown(ANIMATION_TIME);
+      }
+    }
+  function loadGraph(graph) {
+      if (graph.attr("src") == null) {
+          graph.attr("src", graph.data("src"));
+        }
+    }
+  function graphsVisible() {
+      return !$(".extra-graphs").hasClass("hidden");
+    }
+  function fixExpandButton(visible) {
+      const button = $("#show-all-graphs");
+      if (visible) {
+          button.removeClass("fa-angle-double-down");
+          button.addClass("fa-angle-double-up");
+          button.attr("title", "Hide all graphs");
+        } else {
+          button.removeClass("fa-angle-double-up");
+          button.addClass("fa-angle-double-down");
+          button.attr("title", "Show all graphs");
+        }
+    }
+  (function () {
+      const extra = $(".extra-graphs");
+      extra.addClass("hidden");
+      const expand_button = $("#show-all-graphs");
+      expand_button.click(function () {
+          toggleExtraGraphs();
+        });
+    })();
+</script>
