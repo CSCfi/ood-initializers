@@ -88,3 +88,5 @@ if ENV["SSH_KEYGEN_SCRIPT"] != nil
   system("test -x #{ENV['SSH_KEYGEN_SCRIPT']} &&  #{ENV['SSH_KEYGEN_SCRIPT']}" )
 end
 
+ENV["OOD_FILES_APP_REMOTE_FILES"] = "true"
+ENV["PATH"] = "#{ENV.fetch("PATH", "")}:#{File.join("/appl", "opt", "ood", ENV["SLURM_OOD_ENV"], "soft")}"
