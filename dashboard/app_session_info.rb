@@ -24,6 +24,8 @@ href="#{OodAppkit.files.url(path: session.output_file)}">#{File.basename(session
         partition = "<b>Partition:</b> #{info.queue_name}  \n" unless info.queue_name == nil
         cores = "<b>Cores:</b> #{info.procs}  \n" unless info.procs == nil
         memory = "<b>Memory:</b> #{info.native[:min_memory]}  \n" unless (info.native == nil || !info.native.key?(:min_memory))
+        modules = get_modules(session).split(" ")
+        modules_str = modules.empty? ? "" : "<b>Module#{"s" if modules.length > 1}:</b> #{modules.join(", ")}  \n"
 
         # NVME and GPUs are only available by parsing native[:gres]
         if info.native != nil && info.native.key?(:gres)
@@ -42,10 +44,32 @@ href="#{OodAppkit.files.url(path: session.output_file)}">#{File.basename(session
           nvme_string = "<b>Local disk:</b> #{nvme} GB  \n" unless nvme == nil
           gpu_string = "<b>GPUs (#{gpus[:type]}):</b> #{gpus[:amount]}  \n" if (gpus != nil && gpus[:amount] != "0")
         end
-        msg = "#{project}#{partition}#{cores}#{memory}#{nvme_string}#{gpu_string}"
+        msg = "#{project}#{partition}#{cores}#{memory}#{nvme_string}#{gpu_string}#{modules_str}"
       end
       msg
     end
+
+    def get_modules(session)
+      context = File.read(session.user_defined_context_file)
+      options = JSON.parse(context)
+      # VSCode/RStudio
+      if options.has_key?("modules")
+        options.fetch("modules", "")
+      # Jupyter
+      elsif options.has_key?("python_module")
+        modules = options.fetch("python_module", "")
+        if modules == "Custom"
+          modules = options.fetch("custom_module", "")
+        end
+        modules
+      else
+        ""
+      end
+    rescue => e
+      # Fail silently (user defined context doesnt exist or is invalid)
+      ""
+    end
+
 
     # Print seff information
     def seff_stats(session)
