@@ -66,7 +66,7 @@ ENV["SLURM_OOD_ENV"] = case ENV["CSC_OOD_ENVIRONMENT"]
                        end
 
 # Update quota and balance JSON files in tmp, set BU limit to 5%
-system({"LD_LIBRARY_PATH" => "/ood/deps/lib:#{ENV["LD_LIBRARY_PATH"]}"}, "/ood/deps/soft/csc-projects", "-b", "#{ENV["OOD_CSC_BALANCE_PATH"]}", "-q", "#{ENV["OOD_CSC_QUOTA_PATH"]}")
+system({"LD_LIBRARY_PATH" => "#{ENV["CSC_OOD_DEPS_PATH"]}/lib:#{ENV["LD_LIBRARY_PATH"]}"}, "#{ENV["CSC_OOD_DEPS_PATH"]}/soft/csc-projects", "-b", "#{ENV["OOD_CSC_BALANCE_PATH"]}", "-q", "#{ENV["OOD_CSC_QUOTA_PATH"]}")
 
 # Use OODs default quota warnings for home directory only
 # Other quota warnings will be visible in the widget and use env vars OOD_CSC_*
