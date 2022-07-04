@@ -6,6 +6,10 @@ require_relative "./quota.rb"
 require_relative "./app_session_info.rb"
 require_relative "./grafana.rb"
 
+# Require the smart attributes for batch connect forms
+require "smart_attributes"
+require "#{ENV["CSC_OOD_DEPS_PATH"]}/util/attributes/csc_smart_attributes"
+
 OodFilesApp.candidate_favorite_paths.tap do |paths|
   # Add each user's project projappl and scratch directories to the
   # file app as links.
