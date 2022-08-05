@@ -16,5 +16,10 @@ class CSCGrafana
     def time_range
       "3d"
     end
+
+    # Number of panels to show when widget is not expanded
+    def n_panels
+      4
+    end
   end
 end

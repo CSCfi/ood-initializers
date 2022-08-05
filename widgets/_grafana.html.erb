@@ -1,5 +1,5 @@
 <% if CSCGrafana.enabled -%>
-  <% n_panels = 4 %>
+  <% n_panels = CSCGrafana.n_panels %>
   <%= render :partial => 'widgets/grafana/style' %>
   <%= render :layout => 'widgets/container', :locals => {:title => "Usage metrics", :class => "grafana-container" } do %>
     <%= render :partial => 'widgets/grafana/panel', :collection => CSCGrafana.panels.take(n_panels), :locals => {:grafana_url => CSCGrafana.grafana_url, :time_range => CSCGrafana.time_range } %>
