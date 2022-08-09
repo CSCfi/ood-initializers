@@ -12,6 +12,8 @@ Major change is the functionality that allows hiding warnings.
 
 Widgets used on the dashboard.
 Contains three main widgets: the MOTD widget, the logo widget and the notification (quota/balance warning) widget, which use subwidgets.
+For details about how the widgets work and how to create widgets, see [WIDGETS.md](./WIDGETS.md).
+
 ### MOTD
 Wraps the normal OOD MOTD content in a styled box.
 
