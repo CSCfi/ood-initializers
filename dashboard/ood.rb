@@ -20,18 +20,21 @@ OodFilesApp.candidate_favorite_paths.tap do |paths|
 end
 
 # Based on https://discourse.osc.edu/t/set-order-of-interactive-apps-menu-items/1271
-def OodAppGroup.groups_for(apps: [], group_by: :category, nav_limit: nil)
-  grouped = apps.group_by { |app|
+# Sort param added for 2.1 compatibility
+def OodAppGroup.groups_for(apps: [], group_by: :category, nav_limit: nil, sort: true)
+  groups = apps.group_by { |app|
     app.respond_to?(group_by) ? app.send(group_by) : app.metadata[group_by]
   }.map { |k,v|
-    OodAppGroup.new(title: k, apps: v.sort_by { |a| a.title }, nav_limit: nav_limit)
-  }.sort_by { |g| [ g.title.nil? ? 1 : 0, g.title ] }
+    OodAppGroup.new(title: k, apps: sort ? v.sort_by { |a| a.title } : v, nav_limit: nav_limit)
+  }
 
-  if group_by.to_s == "subcategory" then
+  groups = sort ? groups.sort_by { |g| [ g.title.nil? ? 1 : 0, g.title ] } : groups
+
+  if group_by.to_s == "subcategory" && sort then
     # Sort Course environments subcategory to end
-    grouped.sort_by { |g| g.title == "Course environments" ? 1 : 0}
+    groups.sort_by { |g| g.title == "Course environments" ? 1 : 0}
   else
-    grouped
+    groups
   end
 end
 
