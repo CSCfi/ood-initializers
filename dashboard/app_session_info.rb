@@ -214,6 +214,10 @@ EOF
       File.read(file)
     else
       content = yield
+      dir = File.dirname(file)
+      if !File.directory?(dir)
+        FileUtils.mkdir_p(dir)
+      end
       content.tap do |c|
         File.open(file, 'w') { |file| file.write(content) }
       end

@@ -12,9 +12,9 @@
             grid-row-gap: 10px;
           }
           .custom-app-card {
-            color: #000;
-            border: 1px solid rgb(0,0,0,0.125);
-            border-radius: 0.25rem;
+            color: #000000;
+            box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.06), 0px 6px 14px rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
             padding: 0.5rem;
             display: flex;
             flex-direction: column;
@@ -31,8 +31,9 @@
             font-size: 48px;
           }
           .custom-app-card:hover {
+            background-color: #F5F5F5;
+            color: #000000;
             text-decoration: none;
-            border-color: #22527b;
           }
         `;
         document.head.appendChild(pinned_apps_style);

@@ -6,3 +6,4 @@ rsync -r dashboard/ $OOD_INSTALL_ROOT/$1/custom_initializers/dashboard/
 rsync locales/en.yml $OOD_INSTALL_ROOT/$1/locales/en.yml
 rsync ondemand.d/dashboard.yml $OOD_INSTALL_ROOT/$1/config/ondemand.d/dashboard.yml
 rsync -r widgets/ $OOD_INSTALL_ROOT/$1/widgets/
+rsync application.html.erb $OOD_INSTALL_ROOT/$1/apps/sys/dashboard/app/views/layouts/application.html.erb 
