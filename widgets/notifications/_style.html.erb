@@ -1,58 +1,67 @@
 <script>
   const style = document.createElement('style');
   style.textContent = `
-     .notification {
-        padding: 10px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        column-gap: 10px;
-      }
+    .notification {
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      column-gap: 10px;
+    }
+    .notification:not(:nth-last-child(-n+2)) {
+      margin-bottom: 1.50rem;
+    }
     .notification-warning {
-        border-color: #ffab7f;
-      }
+      border-color: #ffab7f;
+    }
+    .notification-warning .progress {
+      box-shadow: unset;
+    }
     .notification-warning .progress-bar {
-        background-color: #002f5f;
-      }
+      background-color: #006778;
+    }
+    h5.notification-title {
+      margin-bottom: 0;
+    }
     .notification-title a {
-        color: #595959;
-        text-decoration: underline;
-      }
+      color: #595959;
+      text-decoration: underline;
+    }
     .notification-message {
-        font-size: 16px;
-      }
+      font-size: 16px;
+    }
+    .notification-message p {
+      margin-bottom: 0.125rem;
+    }
     .notification-content {
-        width: 100%;
-      }
+      width: 100%;
+    }
     .notification-icon {
-        padding: 10px;
-      }
+      padding: 10px;
+    }
     .notification-info .notification-icon {
-        color: #006779;
-      }
+      color: #025b97;
+    }
     .notification-warning .notification-icon {
-        color: #e6bf12;
-      }
+      color: #ff5800;
+    }
     .notification-error .notification-icon {
-        color: #b90729;
-      }
+      color: #e71d32;
+    }
     .notification-title {
-        display: block;
-        font-size: 14px;
-        text-transform: uppercase;
-        color: #595959;
-        font-weight: 500;
-      }
-    .warnings .notification:not(:last-child) {
-        border-bottom: 2px solid #595959;
-      }
+      display: block;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: #595959;
+      font-weight: 500;
+    }
     .warnings {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     #show_all_warnings {
-        margin-top: 10px;
+      margin-top: 10px;
     }
   `;
   document.head.appendChild(style);
