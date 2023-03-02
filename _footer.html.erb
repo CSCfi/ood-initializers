@@ -1,0 +1,21 @@
+<footer class="d-flex m-0 mt-4 justify-content-between align-items-center p-4">
+  <div class="mr-2">
+    <%= link_to "https://openondemand.org" do %>
+      <%=
+        image_tag(
+          "OpenOnDemand_powered_by_RGB.svg",
+          class: "footer-logo",
+          alt: "Powered by Open OnDemand",
+          height: "40px",
+        )
+      %>
+    <% end %>
+  </div>
+  <span>
+    Puhti web interface: <b>Release <%= ENV.fetch("CSC_OOD_RELEASE", "") -%></b> <br> Based on OnDemand version: <%= Configuration.ood_version %>
+    <br>
+    <a href='/use-of-cookies' class='text-secondary'>Cookie policy</a>
+    <br>
+    <a href='/accessibility' class='text-secondary'>Accessibility statement</a>
+  </span>
+</footer>

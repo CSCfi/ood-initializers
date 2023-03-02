@@ -1,11 +1,6 @@
 # Note: When editing this file, changes will only take effect
 # AFTER the PUNs are refreshed.
 
-require_relative "./balance.rb"
-require_relative "./quota.rb"
-require_relative "./app_session_info.rb"
-require_relative "./grafana.rb"
-
 # Require the smart attributes for batch connect forms
 require "smart_attributes"
 require "#{ENV["CSC_OOD_DEPS_PATH"]}/util/attributes/csc_smart_attributes"
