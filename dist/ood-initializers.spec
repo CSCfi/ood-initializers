@@ -3,7 +3,7 @@
 %define util_path /appl/opt/ood
 
 # OOD version from GitHub to use for patching application.html.erb and _footer.html.erb.
-%define ood_version 2.0.31
+%define ood_version 2.1.0-0.rc9
 # Required for having rpmbuild download sources from GitHub automatically.
 %undefine _disable_source_fetch
 
@@ -39,8 +39,8 @@ Open on Demand initializers
 
 %install
 
-%__install -m 0755 -d %{buildroot}%{config_path}/ondemand.d
-%__install -m 0755 -d %{buildroot}%{dashboard_path}{initializers,locales}
+%__install -m 0755 -d %{buildroot}%{config_path}/{ondemand.d,locales}
+%__install -m 0755 -d %{buildroot}%{dashboard_path}initializers
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/widgets/{grafana,notifications}
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/layouts
 
@@ -50,7 +50,7 @@ Open on Demand initializers
 %__install -m 0644 -D %{git_src_path}widgets/grafana/*.erb       %{buildroot}%{dashboard_path}views/widgets/grafana
 %__install -m 0644 -D %{git_src_path}widgets/notifications/*.erb %{buildroot}%{dashboard_path}views/widgets/notifications
 
-%__install -m 0644 %{git_src_path}locales/en.yml           %{buildroot}%{dashboard_path}locales/en.yml
+%__install -m 0644 %{git_src_path}locales/en.yml           %{buildroot}%{config_path}locales/en.yml
 %__install -m 0644 %{git_src_path}ondemand.d/dashboard.yml %{buildroot}%{config_path}ondemand.d/dashboard.yml
 
 %__install -m 0644 %{ood_layouts_path}application.html.erb                %{buildroot}%{dashboard_path}views/layouts/application.html.erb
