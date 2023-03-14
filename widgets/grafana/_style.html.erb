@@ -7,17 +7,11 @@
             flex-wrap: wrap;
           }
         .grafana-iframe {
-          --cols: 2;
-          --col-width: calc(100% / var(--cols));
-          flex: 1 0 var(--col-width);
-          min-width: var(--col-width);
-          height: calc(100vw / var(--cols));
-          max-height: 300px;
+          flex: 1 0 100%;
+          height: 300px;
         }
-        @media (min-width: 560px) {
-          .grafana-iframe {
-            --cols: 4;
-          }
+        .grafana-iframe:not(.extra) {
+          height: 200px;
         }
         .extra-graphs {
           flex-wrap: wrap;
