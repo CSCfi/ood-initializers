@@ -7,8 +7,11 @@
           flex-wrap: wrap;
         }
         .grafana-iframe {
-          width: 100%;
-          min-height: 200px;
+          flex: 1 0 100%;
+          height: 300px;
+        }
+        .grafana-iframe:not(.extra) {
+          height: 200px;
         }
         .extra-graphs {
           flex-wrap: wrap;
