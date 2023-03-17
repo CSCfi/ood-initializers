@@ -172,6 +172,9 @@ EOF
       else
         "Error getting job efficiency statistics: #{e}"
       end
+    rescue => e
+      Rails.logger.error("Error getting job efficiency statistics: #{e}")
+      ""
     end
   end
 
