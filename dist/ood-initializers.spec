@@ -1,6 +1,6 @@
 %define config_path /etc/ood/config/
 %define dashboard_path %{config_path}apps/dashboard/
-%define util_path /appl/opt/ood
+%define deps_path /var/www/ood/deps
 
 # OOD version from GitHub to use for patching application.html.erb and _footer.html.erb.
 %define ood_version 2.1.0
@@ -59,7 +59,7 @@ Open on Demand initializers
 %__patch %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb      %{git_src_path}_footer.html.erb.patch
 %__sed -i 's/CSC_OOD_RELEASE/%{version}/'                                 %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb
 
-echo 'CSC_OOD_DEPS_PATH="%{util_path}"' > %{buildroot}%{dashboard_path}env
+echo 'CSC_OOD_DEPS_PATH="%{deps_path}"' > %{buildroot}%{dashboard_path}env
 
 %files
 
