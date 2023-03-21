@@ -7,7 +7,7 @@ diff -urN a/apps/dashboard/app/views/layouts/_footer.html.erb b/apps/dashboard/a
    </div>
 -  <span>OnDemand version: <%= Configuration.ood_version %></span>
 +  <span>
-+    Puhti web interface: <b>Release <%= ENV.fetch("CSC_OOD_RELEASE", "") -%></b> <br> Based on OnDemand version: <%= Configuration.ood_version %>
++    Puhti web interface: <b>Release CSC_OOD_RELEASE</b> <br> Based on OnDemand version: <%= Configuration.ood_version %>
 +    <br>
 +    <a href='/use-of-cookies' class='text-secondary'>Cookie policy</a>
 +    <br>
