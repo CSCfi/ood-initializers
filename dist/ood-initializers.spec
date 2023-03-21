@@ -3,7 +3,7 @@
 %define util_path /appl/opt/ood
 
 # OOD version from GitHub to use for patching application.html.erb and _footer.html.erb.
-%define ood_version 2.1.0-0.rc9
+%define ood_version 2.1.0
 # Required for having rpmbuild download sources from GitHub automatically.
 %undefine _disable_source_fetch
 
