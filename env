@@ -26,5 +26,6 @@ OOD_NATIVE_VNC_LOGIN_HOST="puhti.csc.fi"
 ABAQUS_GROUP="project_2001978"
 ANSYS_GROUP="project_2001977"
 
-MATOMO_URL="docs-design-matomo.rahtiapp.fi"
-MATOMO_SITE_ID="3"
+# TODO: Update these to actual values
+#MATOMO_URL="docs-design-matomo.rahtiapp.fi"
+#MATOMO_SITE_ID="3"
