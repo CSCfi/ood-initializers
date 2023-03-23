@@ -1,0 +1,30 @@
+# TODO: Remove CSC_OOD_DEPS_PATH
+CSC_OOD_DEPS_PATH="/var/www/ood/deps/"
+
+OOD_BC_DYNAMIC_JS="true"
+OOD_REMOTE_FILES_ENABLED="true"
+
+OOD_CSC_GRAFANA="https://metrics.hpc.csc.fi/d-solo/ood-wwwpuhti/wwwpuhti"
+OOD_CSC_GRAFANA_PANELS="13,8,4"
+
+OOD_QUOTA_THRESHOLD="0.95"
+OOD_CSC_QUOTA_THRESHOLD="0.9"
+OOD_CSC_BALANCE_THRESHOLD="0.1"
+
+OOD_CSC_QUOTA_IGNORE_TIME="14"
+OOD_CSC_BALANCE_IGNORE_TIME="14"
+
+# TODO: Move these to dashboard.yml
+OOD_DASHBOARD_DOCS_URL="https://docs.csc.fi"
+OOD_DASHBOARD_PASSWD_URL="https://my.csc.fi/support"
+OOD_DASHBOARD_SUPPORT_URL="https://research.csc.fi/support"
+OOD_DASHBOARD_SUPPORT_EMAIL="servicedesk@csc.fi"
+
+ENABLE_NATIVE_VNC="yes"
+OOD_NATIVE_VNC_LOGIN_HOST="puhti.csc.fi"
+
+ABAQUS_GROUP="project_2001978"
+ANSYS_GROUP="project_2001977"
+
+MATOMO_URL="docs-design-matomo.rahtiapp.fi"
+MATOMO_SITE_ID="3"

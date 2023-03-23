@@ -22,3 +22,9 @@ pinned_apps:
   - "sys/ood-tensorboard"
   - "sys/ood-vscode"
 pinned_apps_menu_length: 0
+
+dashboard_title: "Puhti.csc.fi"
+dashboard_header_img_logo: "/assets/PUHTI-navbar-logo.svg"
+brand_bg_color: "#FFFFFF"
+brand_link_active_bg_color: "#D8E8EA"
+navbar_type: "light"

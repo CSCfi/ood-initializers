@@ -59,7 +59,7 @@ Open on Demand initializers
 %__patch %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb      %{git_src_path}_footer.html.erb.patch
 %__sed -i 's/CSC_OOD_RELEASE/%{version}/'                                 %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb
 
-echo 'CSC_OOD_DEPS_PATH="%{deps_path}"' > %{buildroot}%{dashboard_path}env
+%__install -m 0644 %{git_src_path}env %{buildroot}%{dashboard_path}
 
 %files
 
