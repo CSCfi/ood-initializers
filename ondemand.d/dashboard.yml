@@ -1,3 +1,12 @@
+custom_pages:
+  metrics:
+    rows:
+      - columns:
+        - width: 12
+          widgets:
+            - shared_style
+            - grafana
+
 dashboard_layout:
   rows:
     - columns:
@@ -28,3 +37,30 @@ dashboard_header_img_logo: "/assets/PUHTI-navbar-logo.svg"
 brand_bg_color: "#FFFFFF"
 brand_link_active_bg_color: "#D8E8EA"
 navbar_type: "light"
+
+help_bar:
+  - "develop"
+  - title: "Metrics"
+    icon: "fa://area-chart"
+    page: "metrics"
+    new_tab: false
+  - title: "Profiles"
+    links:
+      - title: "Default"
+        icon: "fa://cog"
+        profile: "default"
+      - title: "Python"
+        icon: "fa://code"
+        profile: "python"
+  - "help"
+  - "log_out"
+
+custom_css_files: []
+
+profiles:
+  python:
+    pinned_apps:
+      - "sys/files"
+      - "sys/ood-course-jupyter"
+      - "sys/ood-base-jupyter"
+
