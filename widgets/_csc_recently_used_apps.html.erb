@@ -1,0 +1,23 @@
+<%- apps = recently_used_apps -%>
+<% unless apps.empty? %>
+  <%= render :layout => "widgets/container", :locals => { :title => t('dashboard.recently_used_apps_title') } do %>
+    <div id="recent_apps" class="app-row">
+      <% apps.each do |app| -%>
+        <%- link = app.link -%>
+        <%- tile_data = link.tile -%>
+        <%-
+          params = app.attributes.map{|attribute| ["batch_connect_session_context[#{attribute.id}]", attribute.value]}.to_h
+        -%>
+      <%= button_to(
+        batch_connect_session_contexts_path(token: app.token),
+        class: ["recent-app-card"],
+        data: {:method => "post"},
+        params: params,
+      ) do %>
+      <%= icon_tag(link.icon_uri) %>
+      <%= content_tag(:p, link.title) %>
+    <% end %>
+  <% end %>
+    </div>
+  <% end %>
+<% end %>
