@@ -7,7 +7,6 @@ dashboard_layout:
           - csc_pinned_apps
           - notifications
           - grafana
-          - csc_motd
 pinned_apps:
   - "sys/files"
   - "sys/ood-disk-quotas"
