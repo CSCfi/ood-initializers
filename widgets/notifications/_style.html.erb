@@ -11,14 +11,20 @@
     .notification:not(:nth-last-child(-n+2)) {
       margin-bottom: 1.50rem;
     }
-    .notification-warning {
+    .notification {
       border-color: #ffab7f;
     }
-    .notification-warning .progress {
+    .notification .progress {
       box-shadow: unset;
     }
-    .notification-warning .progress-bar {
+    .notification .progress-bar {
       background-color: #006778;
+    }
+    .locked-project.notification .progress-bar {
+      background-color: #DFE1E3;
+    }
+    .locked-project.notification .notification-icon {
+      color: #FFC107;
     }
     h5.notification-title {
       margin-bottom: 0;
@@ -62,6 +68,23 @@
     }
     #show_all_warnings {
       margin-top: 10px;
+    }
+    .info-tag {
+      border: 1px solid #595959;
+      border-radius: 15px;
+      padding: 2px 12px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-left: 2px;
+    }
+    .info-tag .fas {
+      font-size: 0.7rem;
+      vertical-align: 10%;
+    }
+    .notification-title .fa-question-circle {
+      font-size: 1rem;
+      vertical-align: -5%;
     }
   `;
   document.head.appendChild(style);
