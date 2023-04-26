@@ -1,0 +1,27 @@
+<div class="metrics-caption">
+  <p>The above is an overview of what the current resource utilization level of Puhti is.</p>
+
+  <ul>
+    <li>
+      <p>
+        <strong>Disk lag</strong> number is an indicator of how quickly the Lustre file system is responding at the moment.
+        In certain situations, Lustre might slow down and seem very unresponsive, and then the IO lag will
+        be high. Lower numbers are better.
+      </p>
+    </li>
+    <li>
+      <p>
+        <strong>Disk usage</strong> shows how full the Lustre file system is. Lower is better, since distributed
+        file systems will start performing slowly when the amount of free space decreases.
+      </p>
+    </li>
+    <li>
+      <p>
+        <strong>CPU and GPU usage</strong> show how big a share of the total amount of CPUs and GPUs are running jobs
+        at the moment. High utilization indicates that users may need to queue longer for resources.
+      </p>
+    </li>
+  </ul>
+
+  <p>History for Disk lag as well as CPU and GPU utilization, extending back three days, is found below.</p>
+</div>
