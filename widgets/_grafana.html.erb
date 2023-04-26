@@ -4,6 +4,7 @@
   <%= render :layout => 'widgets/container', :locals => {:title => "Usage metrics", :class => "grafana-container" } do %>
     <%= render :partial => 'widgets/grafana/panel', :collection => CSCGrafana.panels.take(n_panels), :locals => {:grafana_url => CSCGrafana.grafana_url, :time_range => CSCGrafana.time_range } %>
     <div class="extra-graphs">
+      <%= render :partial => 'widgets/grafana/caption' %>
       <%= render :partial => 'widgets/grafana/panel', :collection => CSCGrafana.panels.drop(n_panels), :locals => {:grafana_url => CSCGrafana.grafana_url, :time_range => CSCGrafana.time_range, :extra => true } %>
     </div>
     <% if CSCGrafana.panels.length > n_panels %>
