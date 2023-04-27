@@ -20,6 +20,10 @@ OOD_DASHBOARD_PASSWD_URL="https://my.csc.fi/support"
 OOD_DASHBOARD_SUPPORT_URL="https://research.csc.fi/support"
 OOD_DASHBOARD_SUPPORT_EMAIL="servicedesk@csc.fi"
 
+# These are used by ood-csc-status
+OOD_DASHBOARD_TITLE="Puhti.csc.fi"
+OOD_DASHBOARD_HEADER_IMG_LOGO="/assets/images/navbar-logo.svg"
+
 ENABLE_NATIVE_VNC="yes"
 OOD_NATIVE_VNC_LOGIN_HOST="puhti.csc.fi"
 
