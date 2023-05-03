@@ -10,9 +10,9 @@
       <%
           locked_tooltip =
           if balance.locked
-            "Project folder has been locked and job submission is disabled, please contact CSC Service Desk for instructions on how to restore access."
+            "Project folder has been locked and job submission is disabled due to negative BUs, please contact CSC Service Desk for instructions on how to restore access."
           elsif balance.will_be_locked
-            "Project folder will be locked. Submitting jobs is not possible for this project."
+            "Project folder will be locked due to negative BUs. Submitting jobs is not possible for this project."
           end
         %>
       <% if balance.locked %>
