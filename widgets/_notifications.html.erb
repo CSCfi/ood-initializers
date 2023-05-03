@@ -2,7 +2,7 @@
 <% balance_threshold = ENV.fetch("OOD_CSC_BALANCE_THRESHOLD").to_f %>
 <%# Sort projects: locked > will be locked > usage percent %>
 <% quotas = CSCQuota.get.select{ |quota| quota.insufficient?(threshold: quota_threshold ) }.sort_by {|q| [q.locked ? 1 : 0, q.will_be_locked ? 1 : 0, q.percent_total_usage] }.reverse %>
-<% balances = CSCBalance.get.select{ |balance| balance.insufficient?(threshold: balance_threshold) }.sort_by {|b| [b.locked ? 1 : 0, b.will_be_locked ? 1 : 0, b.percent_usage] }.reverse %>
+<% balances = CSCBalance.get.select{ |balance| balance.insufficient?(threshold: balance_threshold) || balance.locked || balance.will_be_locked }.sort_by {|b| [b.locked ? 1 : 0, b.will_be_locked ? 1 : 0, b.percent_usage] }.reverse %>
 
 <%= render :layout => 'widgets/container', :locals => {:title => "Notifications", :id => "notifications" } do %>
   <% if quotas.length + balances.length == 0 %>
