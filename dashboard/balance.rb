@@ -112,6 +112,22 @@ class CSCBalance
     !sufficient?(threshold: threshold)
   end
 
+  def locked_project
+    @locked_project ||= LockedProjects.filtered.find {|p| p.project == @project }
+  end
+
+  def locked
+    locked_project&.locked
+  end
+
+  def will_be_locked
+    locked_project&.will_be_locked
+  end
+
+  def grace_time_end
+    locked_project&.grace_time_end
+  end
+
   def to_s
     "#{number_to_human(@value).downcase} out of #{number_to_human(@maxvalue).downcase} BUs remaining"
   end

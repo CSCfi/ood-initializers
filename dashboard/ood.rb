@@ -5,6 +5,7 @@ require_relative "./balance.rb"
 require_relative "./quota.rb"
 require_relative "./app_session_info.rb"
 require_relative "./grafana.rb"
+require_relative "./locked_projects.rb"
 
 # Require the smart attributes for batch connect forms
 require "smart_attributes"
