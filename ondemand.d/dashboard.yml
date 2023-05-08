@@ -34,4 +34,4 @@ help_bar:
   - "log_out"
 
 custom_css_files: []
-
+cancel_session_enabled: true
