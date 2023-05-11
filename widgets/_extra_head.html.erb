@@ -64,18 +64,18 @@
 
   const containsSensitiveInformation = pathname => {
     const sensitivePaths = [
-      '/pun/sys/dashboard/files/fs/',
-      '/pun/sys/shell/ssh/',
+      FILES_APP_PATHNAME,
+      SHELL_APP_PATHNAME,
     ];
 
-    return sensitivePaths.some(path => pathname.startsWith(path));
+    return sensitivePaths.some(path => pathname.startsWith(path) + '/');
   };
 
   const getLinkSelector = () => {
     const prefix = 'a[target=_blank]:where(';
     const hrefs = [
-      '/pun/sys/dashboard/apps/',
-      '/pun/sys/shell/ssh/',
+      APPS_PATHNAME,
+      SHELL_APP_PATHNAME,
     ];
 
     return hrefs.reduce((acc, curr) => acc + `[href^="${curr}"],`, prefix) + ')';
@@ -127,8 +127,6 @@
     links.forEach(link => link.addEventListener('click', handleClick, false));
   };
 
-  const MATOMO_URL = '<%= ENV["MATOMO_URL"] -%>';
-  const MATOMO_SITE_ID = '<%= ENV["MATOMO_SITE_ID"] -%>';
 
   if (MATOMO_URL && MATOMO_SITE_ID) {
     var _paq = window._paq = window._paq || [];
@@ -153,9 +151,8 @@
     window.addEventListener('load', () => {
       addClickEventListeners();
 
-      if (window.location.pathname.startsWith('/pun/sys/dashboard/files/fs/')) {
-        // See comment on function definition above.
-        addEventListenersAfterMutation()
+      if (window.location.pathname.startsWith(FILES_APP_PATHNAME + '/')) {
+        addEventListenersAfterMutation();
       };
     }, false);
   };
