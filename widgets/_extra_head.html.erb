@@ -68,7 +68,7 @@
       SHELL_APP_PATHNAME,
     ];
 
-    return sensitivePaths.some(path => pathname.startsWith(path) + '/');
+    return sensitivePaths.some(path => pathname.startsWith(path + '/'));
   };
 
   const getLinkSelector = () => {
