@@ -10,12 +10,49 @@
 
 <!-- Matomo -->
 <script>
-  const getStrippedUrl = pathname => {
-    const cutoffDepth = 5;
-    const pathArray = pathname.split('/').filter(s => s);
-    const strippedUrl = `/${pathArray.slice(0, cutoffDepth).join('/')}/`;
+  const MATOMO_URL = '<%= ENV["MATOMO_URL"] -%>';
+  const MATOMO_SITE_ID = '<%= ENV["MATOMO_SITE_ID"] -%>';
+  const FILES_APP_PATHNAME = '/pun/sys/dashboard/files';
+  const SHELL_APP_PATHNAME = '/pun/sys/shell/ssh';
+  const APPS_PATHNAME = '/pun/sys/dashboard/apps';
+  const LOCAL_FILESYSTEM_NAME = 'fs';
+  const REMOTE_FILESYSTEM_NAME_MASK = 'remote';
+  const SENSITIVE_PATHNAME_CUTOFF_DEPTH = 5;
 
-    return strippedUrl;
+
+  const containsRemoteName = pathname => {
+    const escapedFilesAppPathname = FILES_APP_PATHNAME.replace('/', String.raw`\/`);
+
+    /* This should match everything starting with
+        "/pun/sys/dashboard/files/"
+      except
+        "/pun/sys/dashboard/files/fs",
+        "/pun/sys/dashboard/files/fs/"
+      or "/pun/sys/dashboard/files/fs/[...]". */
+    const remoteNameInPathnameRegex = new RegExp(
+      String.raw`^${escapedFilesAppPathname}\/(?!${LOCAL_FILESYSTEM_NAME}($|\/)).*$`,
+      'i');
+
+    return Boolean(pathname.match(remoteNameInPathnameRegex));
+  };
+
+  const pathnameToArray = pathname => pathname
+    .split('/')
+    .filter(s => s)
+    .slice(0, SENSITIVE_PATHNAME_CUTOFF_DEPTH);
+
+  const arrayToPathname = array => `/${array.join('/')}`;
+
+  const getMaskedArray = array => array
+    .slice(0, SENSITIVE_PATHNAME_CUTOFF_DEPTH - 1)
+    .concat([REMOTE_FILESYSTEM_NAME_MASK]);
+
+  const getStrippedPathname = pathname => {
+    const pathArray = pathnameToArray(pathname);
+
+    return containsRemoteName(pathname)
+      ? arrayToPathname(getMaskedArray(pathArray))
+      : arrayToPathname(pathArray);
   };
 
   const getTitle = title => {
@@ -47,7 +84,7 @@
   const wrappedTrackPageView = (title, pathname) => {
     const newTitle = getTitle(title);
     const strippedUrl = containsSensitiveInformation(pathname)
-      ? getStrippedUrl(pathname)
+      ? getStrippedPathname(pathname)
       : pathname;
 
     _paq.push(['disableCookies']);
@@ -98,7 +135,7 @@
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
 
     if (containsSensitiveInformation(window.location.pathname)) {
-      _paq.push(['setCustomUrl', getStrippedUrl(window.location.pathname)]);
+      _paq.push(['setCustomUrl', getStrippedPathname(window.location.pathname)]);
     };
 
     _paq.push(['disableCookies']);
