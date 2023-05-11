@@ -118,6 +118,7 @@
           mutation.addedNodes[0]?.childNodes[1]?.attributes?.id?.value === openInTerminalButtonId
         ) {
           addClickEventListeners();
+          observer.disconnect();
         };
       });
     });
