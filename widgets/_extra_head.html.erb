@@ -56,7 +56,7 @@
   };
 
   const getTitle = title => {
-    // This assumes that the HTML <title> ends with e.g. "- Puhti.csc.fi"
+    // This function assumes that the HTML <title> ends with e.g. "- Puhti.csc.fi".
     const titleSuffix = document.title.split('-').pop().trim();
 
     return `${title} - ${titleSuffix}`;
@@ -72,6 +72,9 @@
   };
 
   const getLinkSelector = () => {
+    /* This function returns a selector for links that are defined to open
+      in a new window (tab) and whose href attribute starts with a string in
+      "hrefs" array. */
     const prefix = 'a[target=_blank]:where(';
     const hrefs = [
       APPS_PATHNAME,
@@ -95,17 +98,18 @@
 
   const handleClick = event => {
     const element = event.currentTarget;
-    const title = element.innerText.trim();
+    const title = element.title || element.innerText.trim();
     const pathname = element.attributes.href.value;
 
     wrappedTrackPageView(title, pathname);
   };
 
-  /* The Files app has a button that gets changed after page load.
-     This is for attaching an event listener to the button and its dropdown menu items, after the change. */
   const addEventListenersAfterMutation = () => {
+    /* The Files app has a button that gets changed after page load.
+      This function is for attaching an event listener to that button and its
+      dropdown menu items, after the change. */
     const openInTerminalButtonId = 'open-in-terminal-btn';
-    const openInTerminalButton = document.querySelector(`#${openInTerminalButtonId}`);
+    const openInTerminalButton = document.getElementById(openInTerminalButtonId);
 
     const observer = new MutationObserver((mutationList, observer) => {
       mutationList.forEach(mutation => {
@@ -122,6 +126,9 @@
   };
 
   const addClickEventListeners = () => {
+    /* This function adds event listeners to some links in order to track page views of
+      pages (e.g. Disk quotas) currently out of reach of the web analytics JS in this file.
+      Clicking such a link will be recorded as a view of the target page. */
     const links = document.querySelectorAll(getLinkSelector());
 
     links.forEach(link => link.addEventListener('click', handleClick, false));
@@ -137,7 +144,7 @@
     };
 
     _paq.push(['disableCookies']);
-    _paq.push(['setDownloadExtensions', ""]);
+    _paq.push(['setDownloadExtensions', '']);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
