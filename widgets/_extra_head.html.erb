@@ -38,10 +38,11 @@
 
   const pathnameToArray = pathname => pathname
     .split('/')
-    .filter(s => s)
-    .slice(0, SENSITIVE_PATHNAME_CUTOFF_DEPTH);
+    .filter(s => s);
 
   const arrayToPathname = array => `/${array.join('/')}`;
+
+  const getStrippedArray = array => array.slice(0, SENSITIVE_PATHNAME_CUTOFF_DEPTH);
 
   const getMaskedArray = array => array
     .slice(0, SENSITIVE_PATHNAME_CUTOFF_DEPTH - 1)
@@ -49,10 +50,11 @@
 
   const getStrippedPathname = pathname => {
     const pathArray = pathnameToArray(pathname);
+    const strippedPathArray = containsRemoteName(pathname)
+      ? getMaskedArray(pathArray)
+      : getStrippedArray(pathArray);
 
-    return containsRemoteName(pathname)
-      ? arrayToPathname(getMaskedArray(pathArray))
-      : arrayToPathname(pathArray);
+    return arrayToPathname(strippedPathArray);
   };
 
   const getTitle = title => {
