@@ -22,7 +22,7 @@ module CSCModules
           name = path.split(PROJECT_MODULES_DIR).last.delete_prefix("/")
         end
         # Resources are nil if file is missing
-        resources = Resources.from_path(path)
+        resources = Resources.from_path(path, project: project)
         self.new(name: name, path: path, test: test, global: global, project: project, resources: resources)
       end
     end
@@ -60,15 +60,15 @@ module CSCModules
   end
 
   # Struct for the resources of a module, loaded from a YML file for each module
-  Resources = Struct.new(:cores, :time, :mem, :local_disk, :partition, keyword_init: true) do
+  Resources = Struct.new(:cores, :time, :mem, :local_disk, :partition, :reservation, :working_dir, :project, keyword_init: true) do
     class << self
-      def from_path(path)
+      def from_path(path, project: nil)
         if File.extname(path) == ".yml"
           # Path already pointing to the resources yml
-          Resources.new(YAML.load_file(path))
+          Resources.new({:project => project}.deep_merge(YAML.load_file(path).symbolize_keys))
         else
           # Path to course
-          Resources.new(YAML.load_file("#{path}-resources.yml"))
+          Resources.new({:project => project}.deep_merge(YAML.load_file("#{path}-resources.yml").symbolize_keys))
         end
       rescue => e
         # Missing resources
@@ -85,6 +85,8 @@ module CSCModules
           "data-set-csc-memory".to_sym => (mem.to_i.to_s unless mem.nil?),
           "data-set-csc-nvme".to_sym => local_disk,
           "data-set-csc-slurm-partition".to_sym => partition,
+          "data-set-csc-slurm-reservation".to_sym => reservation,
+          "data-set-notebook-dir".to_sym => working_dir&.gsub("$PROJECT", project)&.gsub("$USER", Etc.getpwuid.name)&.gsub("$HOME", Dir.home),
         }.compact,
       ]
     end
