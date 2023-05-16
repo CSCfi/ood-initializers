@@ -60,3 +60,16 @@ end
 # Matomo web analytics
 ENV["MATOMO_URL"] = ENV.fetch("MATOMO_URL") { "undefined"}
 ENV["MATOMO_SITE_ID"] = ENV.fetch("MATOMO_SITE_ID") { "undefined" }
+
+module CSCConfiguration
+  class << self
+    def release_name
+      @@release ||= begin
+          version = File.read("/etc/ood/config/CSC_OOD_RELEASE")
+          "Release #{version}"
+        rescue
+          "develop"
+        end
+    end
+  end
+end
