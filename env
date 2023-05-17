@@ -15,9 +15,9 @@ OOD_CSC_QUOTA_IGNORE_TIME="14"
 OOD_CSC_BALANCE_IGNORE_TIME="14"
 
 # TODO: Move these to dashboard.yml
-OOD_DASHBOARD_DOCS_URL="https://docs.csc.fi"
-OOD_DASHBOARD_PASSWD_URL="https://my.csc.fi/support"
-OOD_DASHBOARD_SUPPORT_URL="https://research.csc.fi/support"
+OOD_DASHBOARD_DOCS_URL="https://docs.lumi-supercomputer.eu/"
+OOD_DASHBOARD_PASSWD_URL="https://my.lumi-supercomputer.eu/"
+OOD_DASHBOARD_SUPPORT_URL="https://lumi-supercomputer.eu/user-support/need-help/"
 OOD_DASHBOARD_SUPPORT_EMAIL="servicedesk@csc.fi"
 
 # These are used by ood-csc-status
