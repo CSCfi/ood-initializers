@@ -25,8 +25,8 @@ en:
   dashboard:
     nav_help_custom: "Feedback form"
     welcome_html: ""
-    nav_help_docs: "CSC User guides"
-    nav_help_change_password: "Customer portal (my.csc.fi)"
+    nav_help_docs: "LUMI User guides"
+    nav_help_change_password: "Customer portal (my.lumi-supercomputer.eu)"
 
     shell_app_title: "%{cluster_title} Shell Access"
 
