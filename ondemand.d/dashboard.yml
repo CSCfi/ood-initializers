@@ -16,6 +16,7 @@ pinned_apps:
   - "sys/ood-virtualgl"
   - "sys/ood-base-jupyter"
   - "sys/ood-course-jupyter"
+  - "sys/ood-julia-jupyter"
   - "sys/ood-matlab-html"
   - "sys/ood-rstudio"
   - "sys/ood-tensorboard"
