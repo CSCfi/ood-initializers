@@ -4,8 +4,8 @@ CSC_OOD_DEPS_PATH="/var/www/ood/deps/"
 OOD_BC_DYNAMIC_JS="true"
 OOD_REMOTE_FILES_ENABLED="true"
 
-OOD_CSC_GRAFANA="https://metrics.hpc.csc.fi/d-solo/5CpJwDEVz/wwwmahti"
-OOD_CSC_GRAFANA_PANELS="13,8,4"
+OOD_CSC_GRAFANA="https://metrics.hpc.csc.fi/d-solo/-8RWOzyVz/lumi-public-status"
+OOD_CSC_GRAFANA_PANELS="16,17,6,13,11"
 
 OOD_QUOTA_THRESHOLD="0.95"
 OOD_CSC_QUOTA_THRESHOLD="0.9"
