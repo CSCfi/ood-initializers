@@ -1,6 +1,7 @@
 %define config_path /etc/ood/config/
 %define dashboard_path %{config_path}apps/dashboard/
 %define deps_path /var/www/ood/deps
+%define assets_path /var/www/ood/assets/
 
 # OOD version from GitHub to use for patching application.html.erb and _footer.html.erb.
 %define ood_version 3.0.1
@@ -43,12 +44,15 @@ Open on Demand initializers
 %__install -m 0755 -d %{buildroot}%{dashboard_path}initializers
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/widgets/{grafana,notifications}
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/layouts
+%__install -m 0755 -d %{buildroot}%{assets_path}stylesheets
 
 %__install -m 0644 -D %{git_src_path}dashboard/*.rb %{buildroot}%{dashboard_path}initializers
 
 %__install -m 0644 -D %{git_src_path}widgets/*.erb               %{buildroot}%{dashboard_path}views/widgets
 %__install -m 0644 -D %{git_src_path}widgets/grafana/*.erb       %{buildroot}%{dashboard_path}views/widgets/grafana
 %__install -m 0644 -D %{git_src_path}widgets/notifications/*.erb %{buildroot}%{dashboard_path}views/widgets/notifications
+
+%__install -m 0644 -D %{git_src_path}stylesheets/dashboard.css  %{buildroot}%{assets_path}stylesheets
 
 %__install -m 0644 %{git_src_path}locales/en.yml           %{buildroot}%{config_path}locales/en.yml
 %__install -m 0644 %{git_src_path}ondemand.d/dashboard.yml %{buildroot}%{config_path}ondemand.d/dashboard.yml
@@ -63,6 +67,7 @@ Open on Demand initializers
 %files
 
 %{config_path}
+%{assets_path}/stylesheets/dashboard.css
 
 %changelog
 * Fri Mar 3 2023 Robin Karlsson <robin.karlsson@csc.fi>

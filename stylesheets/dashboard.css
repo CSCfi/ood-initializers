@@ -1,0 +1,25 @@
+body {
+  background-color: #FFF !important;
+  font-family: "Montserrat" !important;
+  letter-spacing: -0.025em;
+}
+
+#navbar .nav-link {
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+
+.custom-app-card {
+  box-shadow: 0px 3px 8px -2px #C7C7C7 !important;
+  border-radius: 0 !important;
+}
+
+.dashboard-container-title-underline {
+  display: none;
+}
+
+.dashboard-container-title-text {
+  font-size: 28px !important;
+  font-weight: 600 !important;
+}
+

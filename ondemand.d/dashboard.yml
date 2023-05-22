@@ -32,5 +32,5 @@ help_bar:
   - "user"
   - "log_out"
 
-custom_css_files: []
+custom_css_files: ['../assets/stylesheets/dashboard.css']
 cancel_session_enabled: true
