@@ -1,6 +1,8 @@
 # Note: When editing this file, changes will only take effect
 # AFTER the PUNs are refreshed.
 
+Rails.logger.info("Running dashboard initializer for user #{`whoami`.strip}")
+
 # Require the smart attributes for batch connect forms
 require "smart_attributes"
 require "#{ENV["CSC_OOD_DEPS_PATH"]}/util/attributes/csc_smart_attributes"
