@@ -32,6 +32,3 @@ ANSYS_GROUP="project_2001977"
 
 MOTD_PATH="/dev/null"
 
-# TODO: Update these to actual values
-MATOMO_URL="docs-design-matomo.rahtiapp.fi"
-MATOMO_SITE_ID="9"
