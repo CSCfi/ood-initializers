@@ -9,7 +9,7 @@
 
 Name:           ood-initializers
 Version:        2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Open on Demand initializers
 
 BuildArch:      noarch
