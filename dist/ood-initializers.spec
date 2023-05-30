@@ -8,8 +8,8 @@
 %undefine _disable_source_fetch
 
 Name:           ood-initializers
-Version:        2
-Release:        3%{?dist}
+Version:        3
+Release:        1%{?dist}
 Summary:        Open on Demand initializers
 
 BuildArch:      noarch
