@@ -1,0 +1,8 @@
+<% if `id -Gn`.split(" ").include?("ood_installation") %>
+<%= render :layout => "widgets/container", :locals => { :title => "" } do %>
+<b>Installed RPMs:</b>
+<pre>
+<%= `rpm -qa | grep ood- | sort` -%>
+</pre>
+<% end %>
+<% end %>
