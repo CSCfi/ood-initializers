@@ -51,7 +51,7 @@ Open on Demand initializers
 %__install -m 0644 -D %{git_src_path}widgets/notifications/*.erb %{buildroot}%{dashboard_path}views/widgets/notifications
 
 %__install -m 0644 %{git_src_path}locales/en.yml           %{buildroot}%{config_path}locales/en.yml
-%__install -m 0644 %{git_src_path}ondemand.d/dashboard.yml %{buildroot}%{config_path}ondemand.d/dashboard.yml
+%__install -m 0644 %{git_src_path}ondemand.d/dashboard.yml.erb %{buildroot}%{config_path}ondemand.d/dashboard.yml.erb
 
 %__install -m 0644 %{ood_layouts_path}application.html.erb                %{buildroot}%{dashboard_path}views/layouts/application.html.erb
 %__install -m 0644 %{ood_layouts_path}_footer.html.erb                    %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb
