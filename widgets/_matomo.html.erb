@@ -1,0 +1,116 @@
+<!-- Matomo -->
+<script>
+  const getStrippedUrl = pathname => {
+    const cutoffDepth = 5;
+    const pathArray = pathname.split('/').filter(s => s);
+    const strippedUrl = `/${pathArray.slice(0, cutoffDepth).join('/')}/`;
+
+    return strippedUrl;
+  };
+
+  const getTitle = title => {
+    // This assumes that the HTML <title> ends with e.g. "- Puhti.csc.fi"
+    const titleSuffix = document.title.split('-').pop().trim();
+
+    return `${title} - ${titleSuffix}`;
+  };
+
+  const containsSensitiveInformation = pathname => {
+    const sensitivePaths = [
+      '/pun/sys/dashboard/files/fs/',
+      '/pun/sys/shell/ssh/',
+    ];
+
+    return sensitivePaths.some(path => pathname.startsWith(path));
+  };
+
+  const getLinkSelector = () => {
+    const prefix = 'a[target=_blank]:where(';
+    const hrefs = [
+      '/pun/sys/dashboard/apps/',
+      '/pun/sys/shell/ssh/',
+    ];
+
+    return hrefs.reduce((acc, curr) => acc + `[href^="${curr}"],`, prefix) + ')';
+  };
+
+  const wrappedTrackPageView = (title, pathname) => {
+    const newTitle = getTitle(title);
+    const strippedUrl = containsSensitiveInformation(pathname)
+      ? getStrippedUrl(pathname)
+      : pathname;
+
+    _paq.push(['disableCookies']);
+    _paq.push(['setCustomUrl', strippedUrl]);
+    _paq.push(['setDocumentTitle', newTitle]);
+    _paq.push(['trackPageView']);
+  };
+
+  const handleClick = event => {
+    const element = event.currentTarget;
+    const title = element.innerText.trim();
+    const pathname = element.attributes.href.value;
+
+    wrappedTrackPageView(title, pathname);
+  };
+
+  /* The Files app has a button that gets changed after page load.
+     This is for attaching an event listener to the button and its dropdown menu items, after the change. */
+  const addEventListenersAfterMutation = () => {
+    const openInTerminalButtonId = 'open-in-terminal-btn';
+    const openInTerminalButton = document.querySelector(`#${openInTerminalButtonId}`);
+
+    const observer = new MutationObserver((mutationList, observer) => {
+      mutationList.forEach(mutation => {
+        if (
+          mutation.type === 'childList' &&
+          mutation.addedNodes[0]?.childNodes[1]?.attributes?.id?.value === openInTerminalButtonId
+        ) {
+          addClickEventListeners();
+        };
+      });
+    });
+
+    observer.observe(openInTerminalButton.parentNode.parentNode, { childList: true });
+  };
+
+  const addClickEventListeners = () => {
+    const links = document.querySelectorAll(getLinkSelector());
+
+    links.forEach(link => link.addEventListener('click', handleClick, false));
+  };
+
+  const MATOMO_URL = '<%= ENV["MATOMO_URL"] -%>';
+  const MATOMO_SITE_ID = '<%= ENV["MATOMO_SITE_ID"] -%>';
+
+  if (MATOMO_URL && MATOMO_SITE_ID) {
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+
+    if (containsSensitiveInformation(window.location.pathname)) {
+      _paq.push(['setCustomUrl', getStrippedUrl(window.location.pathname)]);
+    };
+
+    _paq.push(['disableCookies']);
+    _paq.push(['setDownloadExtensions', ""]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u=`//${MATOMO_URL}/`;
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', MATOMO_SITE_ID]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+
+    window.addEventListener('load', () => {
+      addClickEventListeners();
+
+      if (window.location.pathname.startsWith('/pun/sys/dashboard/files/fs/')) {
+        // See comment on function definition above.
+        addEventListenersAfterMutation()
+      };
+    }, false);
+  };
+</script>
+<!-- End Matomo Code -->
