@@ -14,6 +14,8 @@ OOD_CSC_BALANCE_THRESHOLD="0.1"
 OOD_CSC_QUOTA_IGNORE_TIME="14"
 OOD_CSC_BALANCE_IGNORE_TIME="14"
 
+OOD_CSC_NEGATIVE_BU_CHECK="false"
+
 # TODO: Move these to dashboard.yml
 OOD_DASHBOARD_DOCS_URL="https://docs.lumi-supercomputer.eu/"
 OOD_DASHBOARD_PASSWD_URL="https://my.lumi-supercomputer.eu/"
