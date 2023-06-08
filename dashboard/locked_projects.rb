@@ -30,6 +30,7 @@ module LockedProjects
     private
 
     def all
+      return [] unless ENV["OOD_CSC_NEGATIVE_BU_CHECK"].to_s == "true"
       # File is colon separated, <user>:<project>:<state>:[grace_time_end]
       # grace_time_end is only defined for state "grace".
       File.read(locked_projects_file).strip.lines.map { |l| Project.new(*l.split(":").map(&:strip)) }
