@@ -1,6 +1,7 @@
 %define config_path /etc/ood/config/
 %define dashboard_path %{config_path}apps/dashboard/
 %define deps_path /var/www/ood/deps
+%define assets_path /var/www/ood/assets/
 
 # OOD version from GitHub to use for patching application.html.erb and _footer.html.erb.
 %define ood_version 3.0.1
@@ -8,7 +9,7 @@
 %undefine _disable_source_fetch
 
 Name:           ood-initializers
-Version:        1
+Version:        4
 Release:        1%{?dist}
 Summary:        Open on Demand initializers
 
@@ -43,6 +44,7 @@ Open on Demand initializers
 %__install -m 0755 -d %{buildroot}%{dashboard_path}initializers
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/widgets/{grafana,notifications}
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/layouts
+%__install -m 0755 -d %{buildroot}%{assets_path}scripts
 
 %__install -m 0644 -D %{git_src_path}dashboard/*.rb %{buildroot}%{dashboard_path}initializers
 
@@ -51,18 +53,21 @@ Open on Demand initializers
 %__install -m 0644 -D %{git_src_path}widgets/notifications/*.erb %{buildroot}%{dashboard_path}views/widgets/notifications
 
 %__install -m 0644 %{git_src_path}locales/en.yml           %{buildroot}%{config_path}locales/en.yml
-%__install -m 0644 %{git_src_path}ondemand.d/dashboard.yml %{buildroot}%{config_path}ondemand.d/dashboard.yml
+%__install -m 0644 %{git_src_path}ondemand.d/dashboard.yml.erb %{buildroot}%{config_path}ondemand.d/dashboard.yml.erb
 
 %__install -m 0644 %{ood_layouts_path}application.html.erb                %{buildroot}%{dashboard_path}views/layouts/application.html.erb
 %__install -m 0644 %{ood_layouts_path}_footer.html.erb                    %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb
 %__patch %{buildroot}%{dashboard_path}views/layouts/application.html.erb  %{git_src_path}application.html.erb.patch
 %__patch %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb      %{git_src_path}_footer.html.erb.patch
 
+%__install -m 0644 -D %{git_src_path}javascript/*.js    %{buildroot}%{assets_path}scripts
+
 %__install -m 0644 %{git_src_path}env %{buildroot}%{dashboard_path}
 
 %files
 
 %{config_path}
+%{assets_path}
 
 %changelog
 * Fri Mar 3 2023 Robin Karlsson <robin.karlsson@csc.fi>

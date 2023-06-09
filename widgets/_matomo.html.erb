@@ -1,0 +1,160 @@
+<!-- Matomo -->
+<script>
+  const MATOMO_URL = '<%= ENV["MATOMO_URL"] -%>';
+  const MATOMO_SITE_ID = '<%= ENV["MATOMO_SITE_ID"] -%>';
+  const FILES_APP_PATHNAME = '/pun/sys/dashboard/files';
+  const SHELL_APP_PATHNAME = '/pun/sys/shell/ssh';
+  const APPS_PATHNAME = '/pun/sys/dashboard/apps';
+  const LOCAL_FILESYSTEM_NAME = 'fs';
+  const REMOTE_FILESYSTEM_NAME_MASK = 'remote';
+  const SENSITIVE_PATHNAME_CUTOFF_DEPTH = 5;
+
+
+  const containsRemoteName = pathname => {
+    const escapedFilesAppPathname = FILES_APP_PATHNAME.replace('/', String.raw`\/`);
+
+    /* This should match everything starting with
+        "/pun/sys/dashboard/files/"
+      except
+        "/pun/sys/dashboard/files/fs",
+        "/pun/sys/dashboard/files/fs/"
+      or "/pun/sys/dashboard/files/fs/[...]". */
+    const remoteNameInPathnameRegex = new RegExp(
+      String.raw`^${escapedFilesAppPathname}\/(?!${LOCAL_FILESYSTEM_NAME}($|\/)).*$`,
+      'i');
+
+    return Boolean(pathname.match(remoteNameInPathnameRegex));
+  };
+
+  const pathnameToArray = pathname => pathname
+    .split('/')
+    .filter(s => s);
+
+  const arrayToPathname = array => `/${array.join('/')}`;
+
+  const getStrippedArray = array => array.slice(0, SENSITIVE_PATHNAME_CUTOFF_DEPTH);
+
+  const getMaskedArray = array => array
+    .slice(0, SENSITIVE_PATHNAME_CUTOFF_DEPTH - 1)
+    .concat([REMOTE_FILESYSTEM_NAME_MASK]);
+
+  const getStrippedPathname = pathname => {
+    const pathArray = pathnameToArray(pathname);
+    const strippedPathArray = containsRemoteName(pathname)
+      ? getMaskedArray(pathArray)
+      : getStrippedArray(pathArray);
+
+    return arrayToPathname(strippedPathArray);
+  };
+
+  const getTitle = title => {
+    // This function assumes that the HTML <title> ends with e.g. "- Puhti.csc.fi".
+    const titleSuffix = document.title.split('-').pop().trim();
+
+    return `${title} - ${titleSuffix}`;
+  };
+
+  const containsSensitiveInformation = pathname => {
+    const sensitivePaths = [
+      FILES_APP_PATHNAME,
+      SHELL_APP_PATHNAME,
+    ];
+
+    return sensitivePaths.some(path => pathname.startsWith(path + '/'));
+  };
+
+  const getLinkSelector = () => {
+    /* This function returns a selector for links that are defined to open
+      in a new window (tab) and whose href attribute starts with a string in
+      "hrefs" array. */
+    const prefix = 'a[target=_blank]:where(';
+    const hrefs = [
+      APPS_PATHNAME,
+      SHELL_APP_PATHNAME,
+    ];
+
+    return hrefs.reduce((acc, curr) => acc + `[href^="${curr}"],`, prefix) + ')';
+  };
+
+  const wrappedTrackPageView = (title, pathname) => {
+    const newTitle = getTitle(title);
+    const strippedUrl = containsSensitiveInformation(pathname)
+      ? getStrippedPathname(pathname)
+      : pathname;
+
+    _paq.push(['disableCookies']);
+    _paq.push(['setCustomUrl', strippedUrl]);
+    _paq.push(['setDocumentTitle', newTitle]);
+    _paq.push(['trackPageView']);
+  };
+
+  const handleClick = event => {
+    const element = event.currentTarget;
+    const title = element.title || element.innerText.trim();
+    const pathname = element.attributes.href.value;
+
+    wrappedTrackPageView(title, pathname);
+  };
+
+  const addEventListenersAfterMutation = () => {
+    /* The Files app has a button that gets changed after page load.
+      This function is for attaching an event listener to that button and its
+      dropdown menu items, after the change. */
+    const openInTerminalButtonId = 'open-in-terminal-btn';
+    const openInTerminalButton = document.getElementById(openInTerminalButtonId);
+
+    const observer = new MutationObserver((mutationList, observer) => {
+      mutationList.forEach(mutation => {
+        if (
+          mutation.type === 'childList' &&
+          mutation.addedNodes[0]?.childNodes[1]?.attributes?.id?.value === openInTerminalButtonId
+        ) {
+          addClickEventListeners();
+          observer.disconnect();
+        };
+      });
+    });
+
+    observer.observe(openInTerminalButton.parentNode.parentNode, { childList: true });
+  };
+
+  const addClickEventListeners = () => {
+    /* This function adds event listeners to some links in order to track page views of
+      pages (e.g. Disk quotas) currently out of reach of the web analytics JS in this file.
+      Clicking such a link will be recorded as a view of the target page. */
+    const links = document.querySelectorAll(getLinkSelector());
+
+    links.forEach(link => link.addEventListener('click', handleClick, false));
+  };
+
+
+  if (MATOMO_URL && MATOMO_SITE_ID) {
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+
+    if (containsSensitiveInformation(window.location.pathname)) {
+      _paq.push(['setCustomUrl', getStrippedPathname(window.location.pathname)]);
+    };
+
+    _paq.push(['disableCookies']);
+    _paq.push(['setDownloadExtensions', '']);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u=`//${MATOMO_URL}/`;
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', MATOMO_SITE_ID]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+
+    window.addEventListener('load', () => {
+      addClickEventListeners();
+
+      if (window.location.pathname.startsWith(FILES_APP_PATHNAME + '/')) {
+        addEventListenersAfterMutation();
+      };
+    }, false);
+  };
+</script>
+<!-- End Matomo Code -->

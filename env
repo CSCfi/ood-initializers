@@ -14,6 +14,8 @@ OOD_CSC_BALANCE_THRESHOLD="0.1"
 OOD_CSC_QUOTA_IGNORE_TIME="14"
 OOD_CSC_BALANCE_IGNORE_TIME="14"
 
+OOD_CSC_NEGATIVE_BU_CHECK="true"
+
 # TODO: Move these to dashboard.yml
 OOD_DASHBOARD_DOCS_URL="https://docs.csc.fi"
 OOD_DASHBOARD_PASSWD_URL="https://my.csc.fi/support"
@@ -32,6 +34,3 @@ ANSYS_GROUP="project_2001977"
 
 MOTD_PATH="/dev/null"
 
-# TODO: Update these to actual values
-MATOMO_URL="docs-design-matomo.rahtiapp.fi"
-MATOMO_SITE_ID="9"

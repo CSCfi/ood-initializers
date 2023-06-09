@@ -9,8 +9,8 @@ diff -urN a/apps/dashboard/app/views/layouts/_footer.html.erb b/apps/dashboard/a
 +  <span>
 +    Mahti web interface: <b><%= CSCConfiguration.release_name %></b> <br> Based on OnDemand version: <%= Configuration.ood_version %>
 +    <br>
-+    <a href='/public/?info=cookie_policy' class='text-secondary'>Cookie policy</a>
++    <a id='cookie-policy-toggle' class='text-secondary' tabindex='0'>Cookie policy</a>
 +    <br>
-+    <a href='/public/?info=accessibility_statement' class='text-secondary'>Accessibility statement</a>
++    <a id='accessibility-statement-toggle' class='text-secondary' tabindex='0'>Accessibility statement</a>
 +  </span>
  </footer>
