@@ -17,8 +17,8 @@ Rails.application.config.after_initialize do
     # file app as links.
     projects = User.new.groups.map(&:name)
     # Assuming that the directories are named like the projects.
-    paths.concat projects.filter_map { |p| FavoritePath.new(File.realpath("/projappl/#{p}")) if File.exist?("/projappl/#{p}") }
-    paths.concat projects.filter_map { |p| FavoritePath.new(File.realpath("/scratch/#{p}")) if File.exist?("/scratch/#{p}") }
+    paths.concat projects.filter_map { |p| FavoritePath.new("/projappl/#{p}") if File.exist?("/projappl/#{p}") }
+    paths.concat projects.filter_map { |p| FavoritePath.new("/scratch/#{p}") if File.exist?("/scratch/#{p}") }
   end
 
   # Based on https://discourse.osc.edu/t/set-order-of-interactive-apps-menu-items/1271
