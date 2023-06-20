@@ -40,7 +40,7 @@ EOF
     <br>
   <% end %>
   <% if gpus.present? %>
-    <b>GPUs (<%= gpus[:type] -%>):</b> <%= gpus[:amount] %>
+    <b>GPUs (<%= gpus[:type].upcase -%>):</b> <%= gpus[:amount] %>
     <br>
   <% end %>
   <% if modules.present? %>
