@@ -30,8 +30,9 @@ navbar_type: "light"
 custom_css_files: []
 cancel_session_enabled: true
 
-<% if ["test", "staging", "future"].include?(ENV["SLURM_OOD_ENV"]) %>
 custom_pages:
+  empty: {}
+<% if ["test", "staging", "future"].include?(ENV["SLURM_OOD_ENV"]) %>
   versions:
     rows:
       - columns:
