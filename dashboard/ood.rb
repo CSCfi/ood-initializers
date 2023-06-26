@@ -12,15 +12,7 @@ ENV["OOD_CSC_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json"
 Rails.application.config.after_initialize do
   Rails.logger.info("Running dashboard initializer for user #{`whoami`.strip}")
 
-  OodFilesApp.candidate_favorite_paths.tap do |paths|
-    # Add each user's project projappl and scratch directories to the
-    # file app as links.
-    projects = User.new.groups.map(&:name)
-    # Assuming that the directories are named like the projects.
-    paths.concat projects.filter_map { |p| FavoritePath.new("/projappl/#{p}") if File.exist?("/projappl/#{p}") }
-    paths.concat projects.filter_map { |p| FavoritePath.new("/scratch/#{p}") if File.exist?("/scratch/#{p}") }
-  end
-
+  CSCConfiguration.reset_favorite_paths
   # Based on https://discourse.osc.edu/t/set-order-of-interactive-apps-menu-items/1271
   # Sort param added for 2.1 compatibility
   def OodAppGroup.groups_for(apps: [], group_by: :category, nav_limit: nil, sort: true)
@@ -70,6 +62,18 @@ module CSCConfiguration
         rescue
           "develop"
         end
+    end
+
+    def reset_favorite_paths
+      OodFilesApp.candidate_favorite_paths.tap do |paths|
+        paths.clear
+        # Add each user's project projappl and scratch directories to the
+        # file app as links.
+        projects = User.new.groups.map(&:name)
+        # Assuming that the directories are named like the projects.
+        paths.concat projects.filter_map { |p| FavoritePath.new("/projappl/#{p}") if File.exist?("/projappl/#{p}") }
+        paths.concat projects.filter_map { |p| FavoritePath.new("/scratch/#{p}") if File.exist?("/scratch/#{p}") }
+      end
     end
   end
 end
