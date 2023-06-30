@@ -37,7 +37,7 @@ Rails.application.config.after_initialize do
   NavConfig.categories = ["Files", "Jobs", "Apps", "Terminal", "Tools"]
 
   # Update quota and balance JSON files in tmp, set BU limit to 5%
-  system({ "LD_LIBRARY_PATH" => "#{ENV["CSC_OOD_DEPS_PATH"]}/lib:#{ENV["LD_LIBRARY_PATH"]}" }, "#{ENV["CSC_OOD_DEPS_PATH"]}/soft/csc-projects", "-b", "#{ENV["OOD_CSC_BALANCE_PATH"]}", "-q", "#{ENV["OOD_CSC_QUOTA_PATH"]}")
+  LustreQuota.write_quota_warning_json(ENV["OOD_CSC_QUOTA_PATH"])
 
   # Use OODs default quota warnings for home directory only
   # Other quota warnings will be visible in the widget and use env vars OOD_CSC_*

@@ -22,6 +22,7 @@ Source1:        https://github.com/OSC/ondemand/releases/download/v%{ood_version
 
 Requires:       ondemand
 Requires:       ood-util
+Requires:       ood-lustre-quota
 
 %define git_src_path %{name}-%{version}/
 %define ood_layouts_path ondemand-%{ood_version}/apps/dashboard/app/views/layouts/
