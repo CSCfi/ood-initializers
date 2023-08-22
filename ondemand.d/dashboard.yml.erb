@@ -42,3 +42,12 @@ custom_pages:
             - shared_style
             - versions
 <% end %>
+<% if File.directory?("/var/www/ood/apps/sys/ood-allas-auth") %>
+  allas_auth:
+    rows:
+      - columns:
+        - width: 12
+          widgets:
+            - shared_style
+            - allas_auth
+<% end %>
