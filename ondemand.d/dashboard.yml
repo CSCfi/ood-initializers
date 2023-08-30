@@ -20,5 +20,6 @@ pinned_apps:
   - "sys/ood-matlab-html"
   - "sys/ood-rstudio"
   - "sys/ood-tensorboard"
+  - "sys/ood-mlflow"
   - "sys/ood-vscode"
 pinned_apps_menu_length: 0
