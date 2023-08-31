@@ -19,7 +19,7 @@ class CSCGrafana
 
     # Number of panels to show when widget is not expanded
     def n_panels
-      1
+      2
     end
   end
 end
