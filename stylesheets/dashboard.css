@@ -14,6 +14,10 @@ body {
   font-weight: 700 !important;
 }
 
+.navbar {
+  box-shadow: none !important;
+}
+
 .custom-app-card {
   box-shadow: 0px 3px 8px -2px #C7C7C7 !important;
   border-radius: 0 !important;
