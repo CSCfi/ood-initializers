@@ -73,6 +73,7 @@ module CSCConfiguration
         # Assuming that the directories are named like the projects.
         paths.concat projects.filter_map { |p| FavoritePath.new("/projappl/#{p}") if File.exist?("/projappl/#{p}") }
         paths.concat projects.filter_map { |p| FavoritePath.new("/scratch/#{p}") if File.exist?("/scratch/#{p}") }
+        paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if File.exist?("/flash/#{p}") }
       end
     end
   end
