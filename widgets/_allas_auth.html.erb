@@ -1,5 +1,5 @@
 <%= render :layout => 'widgets/container', :locals => {:title => "Allas configuration" } do %>
-  <% projects = User.new.groups.map(&:name) %>
+  <% projects = User.new.groups.map(&:name).filter { |p| p.start_with? "project_" } %>
   <div id="alerts-container"></div>
   <%= bootstrap_form_tag url: '/pun/sys/ood-allas-auth/auth', remote: true, html: { id: "auth_form" } do |f| %>
     <%= f.select :project, projects, { label: "Project"} %>
