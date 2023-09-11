@@ -149,7 +149,7 @@ EOF
     if options.has_key?("modules")
       options.fetch("modules", "")
       # Jupyter
-    elsif options.has_key?("python_module")
+    elsif options.has_key?("python_module") && options.fetch("advanced", "0") == "0"
       modules = options.fetch("python_module", "")
       if modules == "Custom"
         modules = options.fetch("custom_module", "")
