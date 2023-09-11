@@ -45,6 +45,7 @@ Open on Demand initializers
 %__install -m 0755 -d %{buildroot}%{dashboard_path}initializers
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/widgets/{grafana,notifications}
 %__install -m 0755 -d %{buildroot}%{dashboard_path}views/layouts
+%__install -m 0755 -d %{buildroot}%{assets_path}scripts
 %__install -m 0755 -d %{buildroot}%{assets_path}stylesheets
 
 %__install -m 0644 -D %{git_src_path}dashboard/*.rb %{buildroot}%{dashboard_path}initializers
@@ -63,12 +64,14 @@ Open on Demand initializers
 %__patch %{buildroot}%{dashboard_path}views/layouts/application.html.erb  %{git_src_path}application.html.erb.patch
 %__patch %{buildroot}%{dashboard_path}views/layouts/_footer.html.erb      %{git_src_path}_footer.html.erb.patch
 
+%__install -m 0644 -D %{git_src_path}javascript/*.js    %{buildroot}%{assets_path}scripts
+
 %__install -m 0644 %{git_src_path}env %{buildroot}%{dashboard_path}
 
 %files
 
 %{config_path}
-%{assets_path}/stylesheets/dashboard.css
+%{assets_path}
 
 %changelog
 * Fri Mar 3 2023 Robin Karlsson <robin.karlsson@csc.fi>

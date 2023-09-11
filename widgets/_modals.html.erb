@@ -1,0 +1,74 @@
+<style>
+  .locked-container {
+    overflow-y: hidden;
+  }
+  .csc-modal-content h3, .csc-modal-content h4, .csc-modal-content h5, .csc-modal-content h6 {
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+  }
+  .csc-modal-content h3 {
+    font-size: 1.17em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  .csc-modal-content h4 {
+   font-size: 1em;
+    margin-top: 1.33em;
+    margin-bottom: 1.33em;
+  }
+  .csc-modal-content h5 {
+    font-size: .83em;
+    margin-top: 1.67em;
+    margin-bottom: 1.67em;
+  }
+  .csc-modal-content h6 {
+    font-size: .67em;
+    margin-top: 2.33em;
+    margin-bottom: 2.33em;
+  }
+  .csc-modal-button {
+    padding: 0.75rem 1.25rem;
+    font-weight: 700;
+    font-size: 18px;
+    background-color: #004E8E;
+    color: #FFFFFF;
+    border: none;
+    line-height: normal;
+  }
+  #cookie-policy-toggle:hover, #accessibility-statement-toggle:hover {
+    cursor: pointer;
+  }
+
+  #modal-container dialog[open] {
+    display: flex;
+    flex-direction: column;
+    border: unset;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    height: 95vh;
+    width: 65vw;
+    padding: unset;
+  }
+  #modal-container dialog[open] > h2 {
+    margin: unset;
+    padding: 1rem;
+  }
+  #modal-container dialog[open] > .csc-modal-content {
+    overflow-y: auto;
+    flex-grow: 1;
+    border: 2px solid;
+    margin: 0 1rem;
+    padding: 0 1rem;
+  }
+  #modal-container dialog[open] > .modal-actions {
+    padding: 1rem;
+  }
+</style>
+
+<link rel="modulepreload" href="/assets/modules/locals.js" />
+<link rel="modulepreload" href="/assets/modules/constants.js" />
+<link rel="modulepreload" href="/assets/modules/modals.js" />
+<link rel="modulepreload" href="/assets/modules/utils.js" />
+
+<script type="module" src="/assets/scripts/dashboard_modals.js"></script>
