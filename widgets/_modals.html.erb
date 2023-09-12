@@ -2,32 +2,32 @@
   .locked-container {
     overflow-y: hidden;
   }
-  .csc-modal-content h3, .csc-modal-content h4, .csc-modal-content h5, .csc-modal-content h6 {
+  .lumi-modal-content h3, .lumi-modal-content h4, .lumi-modal-content h5, .lumi-modal-content h6 {
     margin-left: 0;
     margin-right: 0;
     font-weight: bold;
   }
-  .csc-modal-content h3 {
+  .lumi-modal-content h3 {
     font-size: 1.17em;
     margin-top: 1em;
     margin-bottom: 1em;
   }
-  .csc-modal-content h4 {
+  .lumi-modal-content h4 {
    font-size: 1em;
     margin-top: 1.33em;
     margin-bottom: 1.33em;
   }
-  .csc-modal-content h5 {
+  .lumi-modal-content h5 {
     font-size: .83em;
     margin-top: 1.67em;
     margin-bottom: 1.67em;
   }
-  .csc-modal-content h6 {
+  .lumi-modal-content h6 {
     font-size: .67em;
     margin-top: 2.33em;
     margin-bottom: 2.33em;
   }
-  .csc-modal-button {
+  .lumi-modal-actions > button {
     padding: 0.75rem 1.25rem;
     font-weight: 700;
     font-size: 18px;
@@ -40,7 +40,7 @@
     cursor: pointer;
   }
 
-  #modal-container dialog[open] {
+  dialog.lumi-modal[open] {
     display: flex;
     flex-direction: column;
     border: unset;
@@ -50,18 +50,18 @@
     width: 65vw;
     padding: unset;
   }
-  #modal-container dialog[open] > h2 {
+  dialog.lumi-modal[open] > h2 {
     margin: unset;
     padding: 1rem;
   }
-  #modal-container dialog[open] > .csc-modal-content {
+  dialog.lumi-modal[open] > .lumi-modal-content {
     overflow-y: auto;
     flex-grow: 1;
     border: 2px solid;
     margin: 0 1rem;
     padding: 0 1rem;
   }
-  #modal-container dialog[open] > .modal-actions {
+  dialog.lumi-modal[open] > .lumi-modal-actions {
     padding: 1rem;
   }
 </style>
