@@ -1,45 +1,182 @@
+<% api_base_url = "/pun/sys/ood-allas-auth" %>
 <%= render :layout => 'widgets/container', :locals => {:title => "Allas configuration" } do %>
-  <% projects = User.new.groups.map(&:name).filter { |p| p.start_with? "project_" } %>
   <div id="alerts-container"></div>
-  <%= bootstrap_form_tag url: '/pun/sys/ood-allas-auth/auth', remote: true, html: { id: "auth_form" } do |f| %>
-    <%= f.select :project, projects, { label: "Project"} %>
-    <%= f.password_field :password %>
-    <%= f.primary "Submit" %>
-  <% end %>
-  <script>
-    function addAlert(title, content, type = "info") {
-      const alertHtml = `
-<div class="alert alert-${type} alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">×</span>
-  </button>
-  <h4>${title}</h4>
-  <p>${content}</p>
-</div>
-      `;
-      $("#alerts-container").append(alertHtml);
-    }
-    (function () {
-      <% if params["success"] == "true" %>
-        <% CSCConfiguration.reset_favorite_paths %>
-        <% RcloneUtil.class_variable_set(:@@extra_env, nil) %>
-        <% load "config/initializers/rclone.rb" %>
-        <% load "/scratch/project_2001659/robkarls/ood/ood-initializers/dashboard/rclone.rb" %>
-        addAlert("Success", 'Allas configuration successful.', "success");
+  <div id="remotes_container" class="d-none">
+    <span class="font-weight-bold">Currently configured remotes:</span>
+    <table id="remotes_table" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <div id="loading_spinner" class="text-center">
+      <div class="spinner-border clearfix">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <br>
+      Checking for existing authentication...
+    </div>
+  </div>
+  <div id="add_remote_container" class="d-none mt-5">
+    <span class="font-weight-bold">Generate new token for project:</span>
+    <%= bootstrap_form_tag url: "#{api_base_url}/add", remote: true, html: { id: "add_project_form" } do |f| %>
+      <%= f.select :project, [], { skip_label: true }, id: "project_select" %>
+      <%= f.primary "Submit" %>
     <% end %>
-    })()
-    $("#auth_form").on("ajax:success", function(event, data) {
+  </div>
+  <div id="auth_container" class="d-none">
+    <span class="font-weight-bold">Authentication is required to generate Allas access tokens:</span>
+    <%= bootstrap_form_tag url: "#{api_base_url}/renew_token", remote: true, html: { id: "renew_token_form" } do |f| %>
+      <%= f.password_field :password %>
+      <%= f.primary "Submit" %>
+    <% end %>
+  </div>
+<% end %>
+
+<script>
+  const API_BASE_URL = "<%= api_base_url -%>";
+  function addAlert(title, content, type = "info") {
+    const alertHtml = `
+<div class="alert alert-${type} alert-dismissible" role="alert">
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <span aria-hidden="true">×</span>
+</button>
+<h4>${title}</h4>
+<p>${content}</p>
+</div>
+    `;
+    $("#alerts-container").append(alertHtml);
+  }
+  (function () {
+    <% if params["success"] == "true" || params.has_key?("refresh") %>
+      <% CSCConfiguration.reset_favorite_paths %>
+      <% RcloneUtil.class_variable_set(:@@extra_env, nil) %>
+      <% load "config/initializers/rclone.rb" %>
+      <% load "/etc/ood/config/apps/dashboard/initializers/rclone.rb" %>
+      <% if params["success"] == "true" %>
+        addAlert("Success", 'Allas configuration successful.', "success");
+        if (window.history.replaceState) {
+          const url = new URL(window.location);
+          const params = new URLSearchParams(url.search);
+          url.searchParams.delete("success");
+          url.searchParams.delete("refresh");
+          window.history.replaceState(null, "", url);
+        }
+      <% end %>
+    <% end %>
+  })()
+
+  function set_projects(projects) {
+    const project_select = $("#project_select");
+    project_select.empty();
+    const options = projects.map((proj) => {
+      const option = document.createElement("option");
+      $(option).attr("value", proj.Name).text(proj.Name);
+      return option
+    });
+    project_select.append(...options);
+  }
+
+  async function update_projects() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/projects`);
+      $("#loading_spinner").hide();
+      if (!res.ok) {
+        $("#auth_container").removeClass("d-none");
+        $("#add_remote_container").addClass("d-none");
+        return;
+      }
+      const projects = await res.json();
+      set_projects(projects);
+      $("#auth_container").addClass("d-none");
+      $("#add_remote_container").removeClass("d-none");
+    }
+    catch (error) {
+      addAlert("Error", `An error occurred when updating the list of projects.`, "danger");
+    }
+  }
+
+  async function delete_remote(remote) {
+    let formData = new FormData();
+    formData.append('remote', remote);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/delete`,
+        {
+          body: formData,
+          method: "post"
+        });
+      if (res.ok) {
         const url = new URL(window.location);
         const params = new URLSearchParams(url.search);
         url.searchParams.delete("success");
-        url.searchParams.append("success", "true");
+        url.searchParams.delete("refresh");
+        url.searchParams.append("refresh", "");
         window.location.href = url;
+      }
+    } catch (error) {
+      addAlert("Error", `An error occurred when deleting the remote.`, "danger");
+    }
+  }
+
+  function set_remotes(remotes) {
+    const table_rows = remotes.map((remote) => {
+      const tr = document.createElement("tr");
+      const name_td = document.createElement("td");
+      $(name_td).text(remote);
+      const action_td = document.createElement("td");
+      const delete_button = document.createElement("button");
+      $(delete_button)
+        .addClass("btn btn-primary")
+        .text("Delete")
+        .on("click", () => delete_remote(remote));
+      action_td.append(delete_button);
+      $(tr).append(name_td, action_td);
+      return tr;
     });
-    $("#auth_form").on("ajax:error", function(event, data) {
-      console.log(event, data);
-      const xhr = event.originalEvent.detail[2];
-      const responseText = xhr.responseText;
-      addAlert("Error", `Allas configuration failed: ${responseText}`, "danger");
-    });
-  </script>
-<% end %>
+    const table = $("#remotes_table tbody");
+    table.empty();
+    table.append(...table_rows);
+  };
+
+  async function update_remotes() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/remotes`);
+      const remotes = await res.json();
+      set_remotes(remotes);
+      $("#remotes_container").removeClass("d-none");
+    }
+    catch (error) {
+      addAlert("Error", `An error occurred when updating the list of remotes.`, "danger");
+    }
+  }
+
+  (async function () {
+    await Promise.all([update_remotes(), update_projects()]);
+  })();
+
+  $("#add_project_form").on("ajax:success", function(event, data) {
+    const url = new URL(window.location);
+    const params = new URLSearchParams(url.search);
+    url.searchParams.delete("success");
+    url.searchParams.append("success", "true");
+    window.location.href = url;
+  });
+  $("#add_project_form").on("ajax:error", function(event, data) {
+    const xhr = event.originalEvent.detail[2];
+    const responseText = xhr.responseText;
+    addAlert("Error", `Allas configuration failed: ${responseText}`, "danger");
+  });
+
+  $("#renew_token_form").on("ajax:success", async function(event, data) {
+    $("#auth_container").addClass("d-none");
+    await update_projects();
+  });
+  $("#renew_token_form").on("ajax:error", function(event, data) {
+    addAlert("Error", `Authentication failed, please ensure that you typed the password correctly`, "danger");
+  });
+</script>
