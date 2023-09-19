@@ -1,4 +1,11 @@
+<% if params.has_key?("refresh") %>
+  <% CSCConfiguration.reset_favorite_paths %>
+  <% RcloneUtil.class_variable_set(:@@extra_env, nil) %>
+  <% load "config/initializers/rclone.rb" %>
+  <% load "/etc/ood/config/apps/dashboard/initializers/rclone.rb" %>
+<% end %>
 <% api_base_url = "/pun/sys/ood-allas-auth" %>
+<% project_files_url = files_path(fs: "allas-") %>
 <%= render :layout => 'widgets/container', :locals => {:title => "Allas configuration" } do %>
   <div id="alerts-container"></div>
   <div id="remotes_container" class="d-none mb-3">
@@ -66,27 +73,9 @@ ${extra_message}
     `;
     const jqAlert = $(alertHtml);
     jqAlert.find(".alert-content").text(extra_message_content);
+    $("#alerts-container").empty();
     $("#alerts-container").append(jqAlert);
   }
-
-  (function () {
-    <% if params["success"] == "true" || params.has_key?("refresh") %>
-        <% CSCConfiguration.reset_favorite_paths %>
-      <% RcloneUtil.class_variable_set(:@@extra_env, nil) %>
-      <% load "config/initializers/rclone.rb" %>
-      <% load "/etc/ood/config/apps/dashboard/initializers/rclone.rb" %>
-      <% if params["success"] == "true" %>
-        addAlert("Success", 'Allas configuration successful.', "success");
-      <% end %>
-      if (window.history.replaceState) {
-        const url = new URL(window.location);
-        const params = new URLSearchParams(url.search);
-        url.searchParams.delete("success");
-        url.searchParams.delete("refresh");
-        window.history.replaceState(null, "", url);
-      }
-    <% end %>
-  })()
 
   class APIError extends Error {
     constructor(message, response) {
@@ -117,17 +106,40 @@ ${extra_message}
     }
   }
 
-  function force_refresh(show_success = false) {
+  function remote_name(project) {
+    return `allas-${project}`
+  }
+
+  function add_remote_link(remote) {
+    const remote_url = "<%= project_files_url %>".replace("allas-", remote);
+    const existing = $(`#navbar a.dropdown-item[title='${remote}'][href='${remote_url}']`);
+    if (existing.length > 0) {
+      return;
+    }
+    const link = $("<a></a>", { "class": "dropdown-item" }).attr("title", remote).attr("href", remote_url);
+    const icon = $("<i></i>", { "class": "fas fa-folder fa-fw app-icon" });
+    const files_dropdown = $("a.dropdown-item[title='Home Directory']").closest(".dropdown-menu");
+    const html = `
+    <li>
+      <a title="${remote}" class="dropdown-item" href="${remote_url}">
+        <i id="" class="fas fa-folder fa-fw app-icon" title="FontAwesome icon specified: folder" aria-hidden="true"></i>
+        ${remote}
+      </a>
+    </li>`;
+    files_dropdown.append(html);
+  }
+
+  function remove_remote_link(remote) {
+    const remote_url = "<%= project_files_url %>".replace("allas-", remote);
+    const existing = $(`#navbar a.dropdown-item[title='${remote}'][href='${remote_url}']`).closest("li").remove();
+  }
+
+  function force_refresh() {
     const url = new URL(window.location);
     const params = new URLSearchParams(url.search);
-    url.searchParams.delete("success");
     url.searchParams.delete("refresh");
-    if (show_success) {
-      url.searchParams.append("success", "true");
-    } else {
-      url.searchParams.append("refresh", "");
-    }
-    window.location.href = url;
+    url.searchParams.append("refresh", "");
+    fetch(url);
   }
 
   function set_projects(projects) {
@@ -164,7 +176,11 @@ ${extra_message}
     let data = { "remote": remote };
     try {
       await api_post("/delete", data);
+      remove_remote_link(remote);
       force_refresh();
+      addAlert("Success", `Successfully deleted ${remote}.`, "success");
+      const valid_auth = $("#token_expiry_info").is(":visible");
+      await update_remotes(valid_auth);
     } catch (err) {
       console.error(`Error deleting remote: ${err.message}`)
       addAlert("Error", `An error occurred when deleting the remote.`, "danger", "Details:", err.message);
@@ -175,7 +191,11 @@ ${extra_message}
     let data = { "remote": remote };
     try {
       await api_post("/revoke_remote", data);
+      remove_remote_link(remote);
       force_refresh();
+      addAlert("Success", `Successfully revoked the access token for ${remote} and deleted the remote.`, "success");
+      $("#confirmModal").modal("hide");
+      await update_remotes(true);
     } catch (err) {
       console.error(`Error revoking token and deleting remote: ${err.message}`)
       addAlert("Error", `An error occurred when revoking token and deleting the remote.`, "danger", "Details:", err.message);
@@ -287,7 +307,12 @@ ${extra_message}
   })();
 
   $("#add_project_form").on("ajax:success", function(event, data) {
-    force_refresh(true);
+    const project = $("#project_select").val();
+    const remote = remote_name(project);
+    add_remote_link(remote);
+    force_refresh();
+    addAlert("Success", `Successfully configured ${remote} remote.`, "success");
+    update_remotes(true);
   });
   $("#add_project_form").on("ajax:error", function(event, data) {
     const xhr = event.originalEvent.detail[2];
