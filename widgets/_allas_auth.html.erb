@@ -224,7 +224,7 @@ ${extra_message}
           () => show_confirm_modal(
             "Are you sure?",
             "The S3 access key for the remote may currently be in use outside of the web interface, for example, when using Rclone or S3cmd command line tools through SSH.",
-            () => revoke_remote(remote)
+            async () => await revoke_remote(remote)
           ));
       action_td.append(revoke_button);
       $(tr).append(name_td, action_td);
@@ -297,7 +297,10 @@ ${extra_message}
       modal = $('#confirmModal');
     }
     modal.html(modal_html);
-    modal.find('#confirmButton').on("click", callback);
+    modal.find('#confirmButton').on("click", function () {
+      $(this).prop("disabled", true);
+      callback().then(() => { $(this).prop("disabled", false) });
+    });
     modal.modal("show");
   }
 
