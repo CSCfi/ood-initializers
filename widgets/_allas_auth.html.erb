@@ -14,6 +14,7 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
+          <th scope="col">Type</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
@@ -207,27 +208,29 @@ ${extra_message}
     const table_rows = remotes.map((remote) => {
       const tr = document.createElement("tr");
       const name_td = document.createElement("td");
-      $(name_td).text(remote);
+      $(name_td).text(remote.name);
+      const type_td = document.createElement("td");
+      $(type_td).text(remote.type);
       const action_td = document.createElement("td");
       const delete_button = document.createElement("button");
       $(delete_button)
         .addClass("btn btn-primary mr-1")
         .text("Delete")
-        .on("click", () => delete_remote(remote));
+        .on("click", () => delete_remote(remote.name));
       action_td.append(delete_button);
       const revoke_button = document.createElement("button");
       $(revoke_button)
         .addClass("btn btn-primary")
         .text("Revoke")
-        .prop("disabled", !revoke)
+        .prop("disabled", !(revoke && remote.type.toLowerCase() === "s3"))
         .on("click",
           () => show_confirm_modal(
             "Are you sure?",
             "The S3 access key for the remote may currently be in use outside of the web interface, for example, when using Rclone or S3cmd command line tools through SSH.",
-            async () => await revoke_remote(remote)
+            async () => await revoke_remote(remote.name)
           ));
       action_td.append(revoke_button);
-      $(tr).append(name_td, action_td);
+      $(tr).append(name_td, type_td, action_td);
       return tr;
     });
     const table = $("#remotes_table tbody");
