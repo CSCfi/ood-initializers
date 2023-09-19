@@ -178,10 +178,10 @@ ${extra_message}
   async function delete_remote(remote) {
     let data = { "remote": remote };
     try {
-      await api_post("/delete", data);
+      const backup_file = await api_post("/delete", data);
       remove_remote_link(remote);
       force_refresh();
-      addAlert("Success", `Successfully deleted ${remote}.`, "success");
+      addAlert("Success", `Successfully deleted ${remote}. ${backup_file_message(backup_file)}`, "success");
       const valid_auth = $("#token_expiry_info").is(":visible");
       await update_remotes(valid_auth);
     } catch (err) {
@@ -193,10 +193,10 @@ ${extra_message}
   async function revoke_remote(remote) {
     let data = { "remote": remote };
     try {
-      await api_post("/revoke_remote", data);
+      const backup_file = await api_post("/revoke_remote", data);
       remove_remote_link(remote);
       force_refresh();
-      addAlert("Success", `Successfully revoked the access token for ${remote} and deleted the remote.`, "success");
+      addAlert("Success", `Successfully revoked the access token for ${remote} and deleted the remote. ${backup_file_message(backup_file)}`, "success");
       $("#confirmModal").modal("hide");
       await update_remotes(true);
     } catch (err) {
@@ -310,17 +310,27 @@ ${extra_message}
     modal.modal("show");
   }
 
+  function backup_file_message(backup_file) {
+    if (backup_file) {
+      return `Your configuration contained comments, which were not preserved when saving. Your old configuration has been saved to ${backup_file}.`;
+    } else {
+      return "";
+    }
+  }
+
   (async function () {
     $("#revoke_auth").on("click", revoke_os_tokens);
     await Promise.all([update_projects(), update_expiry()]);
   })();
 
   $("#add_project_form").on("ajax:success", function(event, data) {
+    const xhr = event.originalEvent.detail[2];
+    const backup_file = xhr.responseText;
     const project = $("#project_select").val();
     const remote = remote_name(project);
     add_remote_link(remote);
     force_refresh();
-    addAlert("Success", `Successfully configured ${remote} remote.`, "success");
+    addAlert("Success", `Successfully configured ${remote} remote. ${backup_file_message(backup_file)}`, "success");
     update_remotes(true);
   });
   $("#add_project_form").on("ajax:error", function(event, data) {
