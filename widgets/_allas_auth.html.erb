@@ -207,6 +207,7 @@ ${extra_message}
   }
 
   function set_remotes(remotes, revoke) {
+    remotes.sort((a, b) => a.name.localeCompare(b.name));
     const table_rows = remotes.map((remote) => {
       const tr = document.createElement("tr");
       const name_td = document.createElement("td");
