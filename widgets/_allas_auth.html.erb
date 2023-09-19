@@ -32,7 +32,8 @@
     <p>Checking for existing authentication...</p>
   </div>
   <div id="add_remote_container" class="d-none">
-    <span class="font-weight-bold">Generate new S3 token and remote for project:</span>
+    <span class="font-weight-bold">Configure remote for project:</span>
+    <p>If an S3 access token already exists for the project, it will be reused for the remote. Otherwise, a new S3 access token will be generated.</p>
     <%= bootstrap_form_tag url: "#{api_base_url}/add", remote: true, html: { id: "add_project_form" } do |f| %>
       <%= f.select :project, [], { skip_label: true }, id: "project_select" %>
       <%= f.primary "Submit" %>
