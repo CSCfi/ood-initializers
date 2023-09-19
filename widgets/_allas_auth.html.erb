@@ -22,6 +22,8 @@
       </tbody>
     </table>
     <p id="remotes_table_empty">No remotes have been configured.</p>
+    <p>The table above lists the currently configured remotes in the Rclone config.</p>
+    <p>Deleting a remote only removes the configured Rclone remote, while keeping the remote's access token valid as it may be used outside of the web interface. To revoke the access token too, you can use the revoke button for the remote, which will revoke the S3 access token and delete the remote. New Rclone remotes for accessing Allas using S3 can be created below.</p>
   </div>
   <div id="loading_spinner" class="text-center">
     <div class="spinner-border clearfix">
@@ -30,7 +32,7 @@
     <p>Checking for existing authentication...</p>
   </div>
   <div id="add_remote_container" class="d-none">
-    <span class="font-weight-bold">Generate new token for project:</span>
+    <span class="font-weight-bold">Generate new S3 token and remote for project:</span>
     <%= bootstrap_form_tag url: "#{api_base_url}/add", remote: true, html: { id: "add_project_form" } do |f| %>
       <%= f.select :project, [], { skip_label: true }, id: "project_select" %>
       <%= f.primary "Submit" %>
