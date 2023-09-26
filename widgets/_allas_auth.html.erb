@@ -303,6 +303,8 @@ ${extra_message}
     } catch (err) {
       console.error(`Error creating Swift remotes for all projects: ${err.message}`);
       addAlert("Error", `An error occurred when adding Swift remotes for all projects`, "danger", "Details:", err.message);
+      // Adding all remotes can result in partial success, i.e. some remotes added, need to refresh.
+      force_refresh();
     }
   }
 
