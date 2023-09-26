@@ -23,7 +23,7 @@
     </table>
     <p id="remotes_table_empty">No remotes have been configured.</p>
     <p>The table above lists the currently configured remotes in the Rclone config.</p>
-    <p>Deleting a remote only removes the configured Rclone remote, while keeping the remote's access token valid as it may be used outside of the web interface. To revoke the access token too, you can use the revoke button for the remote, which will revoke the S3 access token and delete the remote. New Rclone remotes for accessing Allas using S3 can be created below.</p>
+    <p>Deleting a remote only removes the configured Rclone remote, while keeping the remote's access token valid as it may be used outside of the web interface. To revoke the access token too, you can use the revoke button for the remote, which will revoke the access token and delete the remote. New Rclone remotes for accessing Allas can be created below.</p>
   </div>
   <div id="loading_spinner" class="text-center">
     <div class="spinner-border clearfix">
@@ -33,11 +33,14 @@
   </div>
   <div id="add_remote_container" class="d-none">
     <span class="font-weight-bold">Configure remote for project:</span>
-    <p>If an S3 access token already exists for the project, it will be reused for the remote. Otherwise, a new S3 access token will be generated.</p>
+    <p>When using S3, if an S3 access token already exists for the project, it will be reused for the remote. Otherwise, a new S3 access token will be generated. For Swift remotes, a new token will always be generated.</p>
     <%= bootstrap_form_tag url: "#{api_base_url}/add", remote: true, html: { id: "add_project_form" } do |f| %>
       <%= f.select :project, [], { skip_label: true }, id: "project_select" %>
-      <%= f.primary "Submit" %>
+      <%= f.radio_button :remote_type, "s3", :label => "S3", :id => "remote_type_s3" %>
+      <%= f.radio_button :remote_type, "swift", :label => "Swift", :id => "remote_type_swift", :checked => true %>
+      <%= f.primary "Submit", :class => "btn btn-primary mt-2" %>
     <% end %>
+    <button class="btn btn-primary mt-2" id="add_all">Add Swift remotes for all projects</button>
     <div class="mt-3">
       <p class="mb-0" id="token_expiry_info">The current authentication is valid until <span id="token_expiry"></span>.</p>
       <button class="btn btn-primary" id="revoke_auth">Revoke authentication</button>
@@ -110,8 +113,8 @@ ${extra_message}
     }
   }
 
-  function remote_name(project) {
-    return `allas-${project}`
+  function remote_name(project, s3) {
+    return `${s3 ? "s3" : ""}allas-${project}`
   }
 
   function add_remote_link(remote) {
@@ -194,7 +197,7 @@ ${extra_message}
   async function revoke_remote(remote) {
     let data = { "remote": remote };
     try {
-      const backup_file = await api_post("/revoke_remote", data);
+      const backup_file = await api_post("/revoke", data);
       remove_remote_link(remote);
       force_refresh();
       addAlert("Success", `Successfully revoked the access token for ${remote} and deleted the remote. ${backup_file_message(backup_file)}`, "success");
@@ -226,7 +229,7 @@ ${extra_message}
       $(revoke_button)
         .addClass("btn btn-primary")
         .text("Revoke")
-        .prop("disabled", !(revoke && remote.type.toLowerCase() === "s3"))
+        .prop("disabled", !(revoke && (remote.type.toLowerCase() === "s3" || remote.type.toLowerCase() === "swift")))
         .on("click",
           () => show_confirm_modal(
             "Are you sure?",
@@ -262,6 +265,18 @@ ${extra_message}
       console.error(`Error revoking token: ${err.message}`)
       addAlert("Error", `An error occurred when revoking the tokens`, "danger", "Details:", err.message);
       $("#confirmModal").modal("hide");
+    }
+  }
+
+  async function add_all() {
+    try {
+      const backup_file = await api_post("/add_all", {"remote_type": "swift"});
+      await update_remotes(true);
+      $("#project_select option").toArray().map(o => `allas-${o.value}`).forEach(add_remote_link);
+      addAlert("Success", `Successfully added Swift remotes for all projects. ${backup_file_message(backup_file)}`, "success");
+    } catch (err) {
+      console.error(`Error creating Swift remotes for all projects: ${err.message}`);
+      addAlert("Error", `An error occurred when adding Swift remotes for all projects`, "danger", "Details:", err.message);
     }
   }
 
@@ -321,6 +336,7 @@ ${extra_message}
 
   (async function () {
     $("#revoke_auth").on("click", revoke_os_tokens);
+    $("#add_all").on("click", add_all);
     await Promise.all([update_projects(), update_expiry()]);
   })();
 
@@ -328,7 +344,8 @@ ${extra_message}
     const xhr = event.originalEvent.detail[2];
     const backup_file = xhr.responseText;
     const project = $("#project_select").val();
-    const remote = remote_name(project);
+    const remote_type = $('input[name="remote_type"]:checked').val();
+    const remote = remote_name(project, remote_type === "s3");
     add_remote_link(remote);
     force_refresh();
     addAlert("Success", `Successfully configured ${remote} remote. ${backup_file_message(backup_file)}`, "success");
