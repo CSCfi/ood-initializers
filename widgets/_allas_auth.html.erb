@@ -111,18 +111,19 @@
   }
 
   class APIError extends Error {
-    constructor(message, errors = [], response = null) {
+    constructor(message, errors = [], response = null, data = {}) {
       super(`${message}\n${errors.join("\n")}`);
       this.msg = message;
       this.errors = errors;
       this.response = response;
+      this.data = data;
     }
   }
 
   function parse_api_error(text, res) {
     try {
       const err = JSON.parse(text)
-      return new APIError(err.message, err.errors, res);
+      return new APIError(err.message, err.errors, res, {added: err.added, removed: err.removed, backup: err.backup});
     } catch (e) {
       return new APIError(text, [], res);
     }
@@ -239,7 +240,7 @@
     let data = { "remote": remote };
     try {
       const res = await api_post("/delete", data);
-      remove_remote_links(remote);
+      remove_remote_links(res.removed || []);
       force_refresh();
       addAlert("Success", `Successfully deleted ${remote}. ${backup_file_message(res.backup)}`, "success");
       const valid_auth = $("#token_expiry_info").is(":visible");
@@ -253,7 +254,7 @@
     let data = { "remote": remote };
     try {
       const res = await api_post("/revoke", data);
-      remove_remote_links(remote);
+      remove_remote_links(res.removed || []);
       force_refresh();
       addAlert("Success", `Successfully revoked the access token for ${remote} and deleted the remote. ${backup_file_message(res.backup)}`, "success");
       $("#confirmModal").modal("hide");
@@ -331,10 +332,16 @@
     try {
       const res = await api_post("/add_all", {"remote_type": "swift"});
       await update_remotes(true);
-      $("#add_swift_remote").find(".project_select option").toArray().map(o => `${remote_name(o.value, false)}`).forEach(add_remote_links);
+      (res.added || []).forEach(add_remote_links);
       addAlert("Success", `Successfully added Swift remotes for all projects. ${backup_file_message(res.backup)}`, "success");
     } catch (err) {
-      addError("An error occurred when adding Swift remotes for all projects", err);
+      let added_remotes = "";
+      if (err.data && err.data.added && err.data.added.length) {
+        added_remotes = `Remote${err.data.added.length > 1 ? 's' : ''} ${err.data.added.join(", ")} ${err.data.added.length > 1 ? 'were' : 'was'} added successfully.`;
+        add_remote_links(err.data.added);
+        update_remotes(true);
+      }
+      addError(`An error occurred when adding Swift remotes for all projects. ${added_remotes}`, err);
       // Adding all remotes can result in partial success, i.e. some remotes added, need to refresh.
       force_refresh();
     }
@@ -407,13 +414,9 @@
   $(".add-remote-form").on("ajax:success", function(event, data) {
     const xhr = event.originalEvent.detail[2];
     const res = JSON.parse(xhr.responseText);
-    const form = $(event.currentTarget).closest("form");
-    const project = form.find(".project_select").val();
-    const remote_type = form.find('input[name="remote_type"]').val();
-    const remote = remote_name(project, remote_type === "s3");
-    add_remote_links(remote);
+    add_remote_links(res.added);
     force_refresh();
-    addAlert("Success", `Successfully configured ${remote} remote. ${backup_file_message(res.backup)}`, "success");
+    addAlert("Success", `Successfully configured ${res.added[0]} remote. ${backup_file_message(res.backup)}`, "success");
     update_remotes(true);
   });
   $(".add-remote-form").on("ajax:error", function(event, data) {
