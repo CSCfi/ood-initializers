@@ -42,12 +42,12 @@ custom_pages:
             - shared_style
             - versions
 <% end %>
-<% if File.directory?("/var/www/ood/apps/sys/ood-allas-auth") %>
-  allas_auth:
+<% if File.directory?("/var/www/ood/apps/sys/ood-cloud-storage-conf") %>
+  cloud_storage:
     rows:
       - columns:
         - width: 12
           widgets:
             - shared_style
-            - allas_auth
+            - cloud_storage
 <% end %>

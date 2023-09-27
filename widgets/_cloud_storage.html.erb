@@ -4,9 +4,9 @@
   <% load "config/initializers/rclone.rb" %>
   <% load "/etc/ood/config/apps/dashboard/initializers/rclone.rb" %>
 <% end %>
-<% api_base_url = "/pun/sys/ood-allas-auth" %>
+<% api_base_url = "/pun/sys/ood-cloud-storage-conf" %>
 <% project_files_url = files_path(fs: "allas-") %>
-<%= render :layout => 'widgets/container', :locals => {:title => "Allas configuration" } do %>
+<%= render :layout => 'widgets/container', :locals => {:title => "Cloud storage configuration" } do %>
   <div id="alerts-container"></div>
   <div id="remotes_container" class="d-none mb-3">
     <span class="font-weight-bold">Currently configured remotes:</span>
