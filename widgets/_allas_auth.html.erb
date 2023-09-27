@@ -78,58 +78,77 @@
 <script>
   const API_BASE_URL = "<%= api_base_url -%>";
 
-  function addAlert(title, content, type = "info", extra_message_title = null, extra_message_content = null) {
-    const extra_message = extra_message_title && extra_message_content ? `
-<details>
-  <summary>${extra_message_title}</summary>
-  <p class="alert-content"></p>
-</details>
-` : "";
+  function addAlert(title, content, type = "info", extra_message_title = null, extra_messages = []) {
+    const extra_content = extra_messages.map(msg => $("<p></p>", {class: "mb-0"}).text(msg));
     const alertHtml = `
 <div class="alert alert-${type} alert-dismissible" role="alert">
-<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-  <span aria-hidden="true">×</span>
-</button>
-<h4>${title}</h4>
-<p>
-${content}
-${extra_message}
-</p>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+  <h4>${title}</h4>
+  <p class="alert-content"></p>
+  <details>
+    <summary></summary>
+    <div class="extra-content">
+    </div>
+  </details>
 </div>
     `;
     const jqAlert = $(alertHtml);
-    jqAlert.find(".alert-content").text(extra_message_content);
+    jqAlert.find(".alert-content").text(content);
+    jqAlert.find(".extra-content").append(...extra_content);
+    jqAlert.find("details").toggleClass("d-none", !(extra_message_title && extra_messages.length));
+    jqAlert.find("details summary").text(extra_message_title);
     $("#alerts-container").empty();
     $("#alerts-container").append(jqAlert);
   }
 
+  function addError(desc, err, log = true) {
+    if (log) {
+      console.error(desc, err.message);
+    }
+    addAlert("Error", desc, "danger", "Details:", [err.msg, ...err.errors]);
+  }
+
   class APIError extends Error {
-    constructor(message, response) {
-      super(message);
+    constructor(message, errors = [], response = null) {
+      super(`${message}\n${errors.join("\n")}`);
+      this.msg = message;
+      this.errors = errors;
       this.response = response;
     }
   }
 
-  async function api_get(url, json = false) {
-    const res = await fetch(`${API_BASE_URL}${url}`);
-    if (res.ok) {
-      return await (json ? res.json() : res.text());
-    } else {
-      throw new APIError(await res.text(), res);
+  function parse_api_error(text, res) {
+    try {
+      const err = JSON.parse(text)
+      return new APIError(err.message, err.errors, res);
+    } catch (e) {
+      return new APIError(text, [], res);
     }
   }
 
-  async function api_post(url, formData = {}, json = false) {
+  async function parse_response(res, json) {
+    if (res.ok) {
+      return await (json ? res.json() : res.text());
+    } else {
+      const text = await res.text();
+      throw parse_api_error(text, res);
+    }
+  }
+
+  async function api_get(url, json = true) {
+    const res = await fetch(`${API_BASE_URL}${url}`);
+    return await parse_response(res, json);
+  }
+
+  async function api_post(url, formData = {}, json = true) {
     const body = new FormData();
     for (const [key, value] of Object.entries(formData)) {
       body.append(key, value);
     }
     const res = await fetch(`${API_BASE_URL}${url}`, { body, method: "post" });
-    if (res.ok) {
-      return await (json ? res.json() : res.text());
-    } else {
-      throw new Error(await res.text());
-    }
+    return await parse_response(res, json);
   }
 
   function remote_name(project, s3) {
@@ -187,8 +206,7 @@ ${extra_message}
       success = true;
     } catch (err) {
       if (!(err.response && err.response.status === 401)) {
-        console.error(`Error updating list of projects: ${err.message}`)
-        addAlert("Error", `An error occurred when updating the list of projects.`, "danger", "Details:", err.message);
+        addError("An error occurred when updating the list of projects.", err);
       }
     } finally {
       $("#loading_spinner").hide();
@@ -201,30 +219,28 @@ ${extra_message}
   async function delete_remote(remote) {
     let data = { "remote": remote };
     try {
-      const backup_file = await api_post("/delete", data);
+      const res = await api_post("/delete", data);
       remove_remote_link(remote);
       force_refresh();
-      addAlert("Success", `Successfully deleted ${remote}. ${backup_file_message(backup_file)}`, "success");
+      addAlert("Success", `Successfully deleted ${remote}. ${backup_file_message(res.backup)}`, "success");
       const valid_auth = $("#token_expiry_info").is(":visible");
       await update_remotes(valid_auth);
     } catch (err) {
-      console.error(`Error deleting remote: ${err.message}`)
-      addAlert("Error", `An error occurred when deleting the remote.`, "danger", "Details:", err.message);
+      addError("An error occurred when deleting the remote.", err);
     }
   }
 
   async function revoke_remote(remote) {
     let data = { "remote": remote };
     try {
-      const backup_file = await api_post("/revoke", data);
+      const res = await api_post("/revoke", data);
       remove_remote_link(remote);
       force_refresh();
-      addAlert("Success", `Successfully revoked the access token for ${remote} and deleted the remote. ${backup_file_message(backup_file)}`, "success");
+      addAlert("Success", `Successfully revoked the access token for ${remote} and deleted the remote. ${backup_file_message(res.backup)}`, "success");
       $("#confirmModal").modal("hide");
       await update_remotes(true);
     } catch (err) {
-      console.error(`Error revoking token and deleting remote: ${err.message}`)
-      addAlert("Error", `An error occurred when revoking token and deleting the remote.`, "danger", "Details:", err.message);
+      addError("An error occurred when revoking token and deleting the remote.", err);
       $("#confirmModal").modal("hide");
     }
   }
@@ -278,8 +294,7 @@ ${extra_message}
       set_remotes(remotes, revoke);
       $("#remotes_container").removeClass("d-none");
     } catch (err) {
-      console.error(`Error updating list of remotes: ${err.message}`)
-      addAlert("Error", `An error occurred when updating the list of remotes.`, "danger", "Details:", err.message);
+      addError("An error occurred when updating the list of remotes.", err);
     }
   }
 
@@ -288,21 +303,19 @@ ${extra_message}
       await api_post("/revoke_tokens");
       update_projects();
     } catch (err) {
-      console.error(`Error revoking token: ${err.message}`)
-      addAlert("Error", `An error occurred when revoking the tokens`, "danger", "Details:", err.message);
+      addError("An error occurred when revoking the tokens", err);
       $("#confirmModal").modal("hide");
     }
   }
 
   async function add_all() {
     try {
-      const backup_file = await api_post("/add_all", {"remote_type": "swift"});
+      const res = await api_post("/add_all", {"remote_type": "swift"});
       await update_remotes(true);
       $("#add_swift_remote").find(".project_select option").toArray().map(o => `${remote_name(o.value, false)}`).forEach(add_remote_link);
-      addAlert("Success", `Successfully added Swift remotes for all projects. ${backup_file_message(backup_file)}`, "success");
+      addAlert("Success", `Successfully added Swift remotes for all projects. ${backup_file_message(res.backup)}`, "success");
     } catch (err) {
-      console.error(`Error creating Swift remotes for all projects: ${err.message}`);
-      addAlert("Error", `An error occurred when adding Swift remotes for all projects`, "danger", "Details:", err.message);
+      addError("An error occurred when adding Swift remotes for all projects", err);
       // Adding all remotes can result in partial success, i.e. some remotes added, need to refresh.
       force_refresh();
     }
@@ -310,12 +323,12 @@ ${extra_message}
 
   async function update_expiry() {
     try {
-      const expiry = await api_get("/status");
+      const expiry = (await api_get("/status")).expires;
       $("#token_expiry").text(expiry);
       $("#token_validity_info").removeClass("d-none");
     } catch (err) {
       if (!(err.response && err.response.status === 401)) {
-        console.error(`Error updating token expiry: ${err.message}`)
+        console.error("Error updating token expiry:", err.message)
         $("#token_validity_info").addClass("d-none");
       }
     }
@@ -374,21 +387,20 @@ ${extra_message}
 
   $(".add-remote-form").on("ajax:success", function(event, data) {
     const xhr = event.originalEvent.detail[2];
-    const backup_file = xhr.responseText;
+    const res = JSON.parse(xhr.responseText);
     const form = $(event.currentTarget).closest("form");
     const project = form.find(".project_select").val();
     const remote_type = form.find('input[name="remote_type"]').val();
     const remote = remote_name(project, remote_type === "s3");
     add_remote_link(remote);
     force_refresh();
-    addAlert("Success", `Successfully configured ${remote} remote. ${backup_file_message(backup_file)}`, "success");
+    addAlert("Success", `Successfully configured ${remote} remote. ${backup_file_message(res.backup)}`, "success");
     update_remotes(true);
   });
   $(".add-remote-form").on("ajax:error", function(event, data) {
     const xhr = event.originalEvent.detail[2];
-    const err = xhr.responseText;
-    console.error(`Authentication failed: ${err}`);
-    addAlert("Error", `Allas configuration failed.`, "danger", "Details:", err);
+    const err = parse_api_error(xhr.responseText);
+    addError(`Configuration failed.`, err);
   });
 
   $("#renew_token_form").on("ajax:success", async function(event, data) {
@@ -397,8 +409,7 @@ ${extra_message}
   });
   $("#renew_token_form").on("ajax:error", function(event, data) {
     const xhr = event.originalEvent.detail[2];
-    const err = xhr.responseText;
-    console.error(`Authentication failed: ${err}`);
-    addAlert("Error", `Authentication failed, please ensure that you typed the password correctly.`, "danger", "Details:", err);
+    const err = parse_api_error(xhr.responseText);
+    addError("Authentication failed, please ensure that you typed the password correctly.", err);
   });
 </script>
