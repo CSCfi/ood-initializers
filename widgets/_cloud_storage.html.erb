@@ -337,7 +337,7 @@
     } catch (err) {
       let added_remotes = "";
       if (err.data && err.data.added && err.data.added.length) {
-        added_remotes = `Remote${err.data.added.length > 1 ? 's' : ''} ${err.data.added.join(", ")} ${err.data.added.length > 1 ? 'were' : 'was'} added successfully.`;
+        added_remotes = `Remote${err.data.added.length > 1 ? 's' : ''} ${err.data.added.join(", ")} ${err.data.added.length > 1 ? 'were' : 'was'} added successfully. ${backup_file_message(err.data.backup)}`;
         add_remote_links(err.data.added);
         update_remotes(true);
       }
