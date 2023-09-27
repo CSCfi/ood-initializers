@@ -43,7 +43,7 @@
     </ul>
     <div class="tab-content" id="form_tab_content">
       <div class="tab-pane show active" id="tab_allas_swift" role="tabpanel" aria-labelledby="nav_tbn_allas_swift">
-        <p class="mt-2">A new Swift access token will be generated for each new remote.</p>
+        <p class="mt-2">A new Swift access token will be generated for each new remote. The token will be valid for 8 hours.</p>
         <%= bootstrap_form_tag :url => "#{api_base_url}/add", :remote => true, :html => { :id => "add_swift_remote", :class => "add-remote-form" } do |f| %>
           <%= f.select :project, [], { :label => "Project" }, :class => "project_select", :id => nil %>
           <%= f.hidden_field :remote_type, :value => :swift, :id => nil  %>
