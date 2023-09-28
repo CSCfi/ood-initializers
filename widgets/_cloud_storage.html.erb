@@ -44,7 +44,7 @@
     </ul>
     <div class="tab-content" id="form_tab_content">
       <div class="tab-pane show active" id="tab_allas_swift" role="tabpanel" aria-labelledby="nav_tbn_allas_swift">
-        <p class="mt-2">A new Swift access token will be generated for each new remote. The token will be valid for 8 hours.</p>
+        <p class="mt-2">A new Swift access token will be generated for each new remote. The new token will be valid until <span class="token_expiry"></span>.</p>
         <%= bootstrap_form_tag :url => "#{api_base_url}/add", :remote => true, :html => { :id => "add_swift_remote", :class => "add-remote-form" } do |f| %>
           <%= f.select :project, [], { :label => "Project" }, :class => "project_select", :id => nil %>
           <%= f.hidden_field :remote_type, :value => :swift, :id => nil  %>
@@ -62,13 +62,13 @@
       </div>
     </div>
     <div class="mt-3">
-      <p class="mb-0" id="token_expiry_info">The current authentication is valid until <span id="token_expiry"></span>.</p>
+      <p class="mb-0" id="token_expiry_info">The current authentication is valid until <span class="token_expiry"></span>.</p>
       <button class="btn btn-primary" id="revoke_auth">Revoke authentication</button>
     </div>
   </div>
   <div id="auth_container" class="d-none">
     <span class="font-weight-bold">Authentication is required to generate or revoke Allas access tokens:</span>
-    <p>The authentication will be valid for 8 hours. Generated Allas access tokens are valid forever.</p>
+    <p>The authentication will be valid for 8 hours.</p>
     <%= bootstrap_form_tag url: "#{api_base_url}/renew_token", remote: true, html: { id: "renew_token_form" } do |f| %>
       <%= f.password_field :password %>
       <%= f.primary "Submit" %>
@@ -353,7 +353,7 @@
   async function update_expiry() {
     try {
       const expiry = (await api_get("/status")).expires;
-      $("#token_expiry").text(expiry);
+      $(".token_expiry").text(expiry);
       $("#token_validity_info").removeClass("d-none");
     } catch (err) {
       if (!(err.response && err.response.status === 401)) {
