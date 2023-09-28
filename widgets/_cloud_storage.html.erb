@@ -61,10 +61,6 @@
         <% end %>
       </div>
     </div>
-    <div class="mt-3">
-      <p class="mb-0" id="token_expiry_info">The current authentication is valid until <span class="token_expiry"></span>.</p>
-      <button class="btn btn-primary" id="revoke_auth">Revoke authentication</button>
-    </div>
   </div>
   <div id="auth_container" class="d-none">
     <span class="font-weight-bold">Authentication is required to generate or revoke Allas access tokens:</span>
@@ -365,12 +361,10 @@
   async function update_expiry() {
     try {
       const expiry = (await api_get("/status")).expires;
-      $("#token_validity_info").removeClass("d-none");
       $(".token_expiry").text(format_expiry(expiry));
     } catch (err) {
       if (!(err.response && err.response.status === 401)) {
         console.error("Error updating token expiry:", err.message)
-        $("#token_validity_info").addClass("d-none");
       }
     }
   }
