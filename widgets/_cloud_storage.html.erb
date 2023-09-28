@@ -15,6 +15,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Type</th>
+          <th scope="col">Expiry</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
@@ -273,6 +274,8 @@
       $(name_td).text(remote.name);
       const type_td = document.createElement("td");
       $(type_td).text(remote.type);
+      const expiry_td = document.createElement("td");
+      $(expiry_td).text(remote.expires);
       const action_td = document.createElement("td");
       const delete_button = document.createElement("button");
       $(delete_button)
@@ -299,7 +302,7 @@
           }
         );
       action_td.append(revoke_button);
-      $(tr).append(name_td, type_td, action_td);
+      $(tr).append(name_td, type_td, expiry_td, action_td);
       return tr;
     });
     const table = $("#remotes_table tbody");
