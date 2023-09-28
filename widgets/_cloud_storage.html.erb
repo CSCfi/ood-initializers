@@ -153,6 +153,18 @@
     return await parse_response(res, json);
   }
 
+  function format_expiry(timestamp) {
+    if (typeof timestamp === "number") {
+      const dt = new Date(timestamp*1000);
+      const y = dt.getFullYear();
+      const m = dt.getMonth()+1;
+      const d = dt.getDate();
+      const time = dt.toLocaleTimeString("default", { hour: "numeric", minute: "numeric", second: "numeric", hour12: false, timeZoneName: "short"});
+      return `${y}-${m}-${d} ${time}`;
+    }
+    return timestamp;
+  }
+
   function remote_name(project, s3) {
     return `${s3 ? "s3" : ""}allas-${project}`
   }
@@ -275,7 +287,7 @@
       const type_td = document.createElement("td");
       $(type_td).text(remote.type);
       const expiry_td = document.createElement("td");
-      $(expiry_td).text(remote.expires);
+      $(expiry_td).text(format_expiry(remote.expires));
       const action_td = document.createElement("td");
       const delete_button = document.createElement("button");
       $(delete_button)
@@ -353,8 +365,8 @@
   async function update_expiry() {
     try {
       const expiry = (await api_get("/status")).expires;
-      $(".token_expiry").text(expiry);
       $("#token_validity_info").removeClass("d-none");
+      $(".token_expiry").text(format_expiry(expiry));
     } catch (err) {
       if (!(err.response && err.response.status === 401)) {
         console.error("Error updating token expiry:", err.message)
