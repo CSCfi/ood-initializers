@@ -353,9 +353,8 @@
         update_remotes(true);
       }
       addError(`An error occurred when adding Swift remotes for all projects. ${added_remotes}`, err);
-      // Adding all remotes can result in partial success, i.e. some remotes added, need to refresh.
-      force_refresh();
     }
+    force_refresh();
   }
 
   async function update_expiry() {
