@@ -64,8 +64,7 @@
     </div>
   </div>
   <div id="auth_container" class="d-none">
-    <span class="font-weight-bold">Authentication is required to generate or revoke Allas access tokens:</span>
-    <p>The authentication will be valid for 8 hours.</p>
+    <span class="font-weight-bold">Authentication using the password of your CSC account is required to generate or revoke Allas access tokens:</span>
     <%= bootstrap_form_tag url: "#{api_base_url}/renew_token", remote: true, html: { id: "renew_token_form" } do |f| %>
       <%= f.password_field :password %>
       <%= f.primary "Submit" %>
