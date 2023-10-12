@@ -214,7 +214,7 @@ EOF
   # Read the contents of a file or write contents returned by block if it doesn't exist
   def cached_or_else(file, &block)
     if File.exists?(file) && File.readable?(file)
-      File.read(file)
+      File.open(file, File::NOFOLLOW) { |f| f.read }
     else
       content = yield
       dir = File.dirname(file)
@@ -222,11 +222,14 @@ EOF
         FileUtils.mkdir_p(dir)
       end
       content.tap do |c|
-        File.open(file, 'w') { |file| file.write(content) }
+        File.open(file, 'w', File::NOFOLLOW) { |file| file.write(content) }
       end
     end
-  rescue IOError
+  rescue IOError => e
     Rails.logger.error("Error reading or writing cache file #{file} for app card: #{e}")
+    ""
+  rescue SystemCallError
+    # File was symlinked
     ""
   end
 
