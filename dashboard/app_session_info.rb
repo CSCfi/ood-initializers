@@ -222,7 +222,7 @@ EOF
         FileUtils.mkdir_p(dir)
       end
       content.tap do |c|
-        File.open(file, 'w', File::NOFOLLOW) { |file| file.write(content) }
+        File.open(file, File::NOFOLLOW|File::CREAT|File::WRONLY|File::TRUNC) { |file| file.write(content) }
       end
     end
   rescue IOError => e
