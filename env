@@ -23,7 +23,7 @@ OOD_DASHBOARD_SUPPORT_URL="https://lumi-supercomputer.eu/user-support/need-help/
 OOD_DASHBOARD_SUPPORT_EMAIL="servicedesk@csc.fi"
 
 # These are used by ood-csc-status
-OOD_DASHBOARD_TITLE="Lumi.csc.fi"
+OOD_DASHBOARD_TITLE="LUMI.csc.fi"
 OOD_DASHBOARD_HEADER_IMG_LOGO="/assets/images/navbar-logo.svg"
 
 ENABLE_NATIVE_VNC="yes"
