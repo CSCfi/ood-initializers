@@ -18,7 +18,6 @@ OOD_CSC_NEGATIVE_BU_CHECK="false"
 
 # TODO: Move these to dashboard.yml
 OOD_DASHBOARD_DOCS_URL="https://docs.lumi-supercomputer.eu/"
-OOD_DASHBOARD_PASSWD_URL="https://my.lumi-supercomputer.eu/"
 OOD_DASHBOARD_SUPPORT_URL="https://lumi-supercomputer.eu/user-support/need-help/"
 OOD_DASHBOARD_SUPPORT_EMAIL="servicedesk@csc.fi"
 
