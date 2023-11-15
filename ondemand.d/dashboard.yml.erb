@@ -34,6 +34,12 @@ cancel_session_enabled: true
 
 custom_pages:
   empty: {}
+  refresh_remotes:
+    rows:
+      - columns:
+        - width: 12
+          widgets:
+            - refresh_remotes
 <% if ["test", "staging", "future"].include?(ENV["SLURM_OOD_ENV"]) %>
   versions:
     rows:
