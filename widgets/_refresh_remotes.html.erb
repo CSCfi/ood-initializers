@@ -1,0 +1,4 @@
+<% CSCConfiguration.reset_favorite_paths %>
+<% RcloneUtil.class_variable_set(:@@extra_env, nil) %>
+<% load "config/initializers/rclone.rb" %>
+<% load "/etc/ood/config/apps/dashboard/initializers/rclone.rb" %>

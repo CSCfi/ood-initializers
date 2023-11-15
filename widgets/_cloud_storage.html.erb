@@ -1,8 +1,5 @@
 <% if params.has_key?("refresh") %>
-  <% CSCConfiguration.reset_favorite_paths %>
-  <% RcloneUtil.class_variable_set(:@@extra_env, nil) %>
-  <% load "config/initializers/rclone.rb" %>
-  <% load "/etc/ood/config/apps/dashboard/initializers/rclone.rb" %>
+  <% render "widgets/refresh_remotes" %>
 <% end %>
 <% api_base_url = "/pun/sys/ood-cloud-storage-conf" %>
 <% project_files_url = files_path(fs: "allas-") %>
