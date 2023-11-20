@@ -3,6 +3,7 @@ CSC_OOD_DEPS_PATH="/var/www/ood/deps/"
 
 OOD_BC_DYNAMIC_JS="true"
 OOD_REMOTE_FILES_ENABLED="true"
+OOD_REMOTE_FILES_VALIDATION="true"
 
 OOD_CSC_GRAFANA="https://metrics.hpc.csc.fi/d-solo/5CpJwDEVz/wwwmahti"
 OOD_CSC_GRAFANA_PANELS="13,8,4"
