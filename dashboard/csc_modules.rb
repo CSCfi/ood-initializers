@@ -8,6 +8,9 @@ module CSCModules
   Module = Struct.new(:name, :path, :test, :global, :project, :resources, keyword_init: true) do
     class << self
       def from_path(path)
+        if path.blank?
+          raise "No module was selected. If you do not see any module in the dropdown, there are no available modules for that project.\nPlease create a module or select one from a different project."
+        end
         # Test module (needs `module load use.own`)
         test = path.start_with?(PRIVATE_MODULES_DIR)
         # Global module (available to everyone, need to prefix module load with course/)
