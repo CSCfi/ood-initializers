@@ -88,7 +88,7 @@ module CSCModules
           "data-set-csc-memory".to_sym => (mem.to_i.to_s unless mem.nil?),
           "data-set-csc-nvme".to_sym => local_disk,
           "data-set-csc-slurm-partition".to_sym => partition,
-          "data-set-csc-slurm-reservation".to_sym => reservation,
+          "data-csc-slurm-reservation".to_sym => reservation,
           "data-set-notebook-dir".to_sym => working_dir&.gsub("$PROJECT", project)&.gsub("$USER", Etc.getpwuid.name)&.gsub("$HOME", Dir.home),
         }.compact,
       ]
