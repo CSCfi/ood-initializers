@@ -4,7 +4,7 @@
 %define assets_path /var/www/ood/assets/
 
 # OOD version from GitHub to use for patching application.html.erb and _footer.html.erb.
-%define ood_version 3.0.2
+%define ood_version 3.1.0
 # Required for having rpmbuild download sources from GitHub automatically.
 %undefine _disable_source_fetch
 
