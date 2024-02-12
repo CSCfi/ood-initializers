@@ -1,10 +1,10 @@
 diff -urN a/apps/dashboard/app/views/layouts/application.html.erb b/apps/dashboard/app/views/layouts/application.html.erb
---- a/apps/dashboard/app/views/layouts/application.html.erb	2023-03-03 20:45:52.000000000 +0200
-+++ b/apps/dashboard/app/views/layouts/application.html.erb	2023-03-07 13:35:06.537684136 +0200
-@@ -25,6 +25,11 @@
-     data-max-file-size="<%= Configuration.file_upload_max %>"
-     data-transfers-path="<%= transfers_path(format: "json") if respond_to?(:transfers_path) %>"
-   />
+--- a/apps/dashboard/app/views/layouts/application.html.erb	2024-02-12 12:31:02.049457483 +0200
++++ b/apps/dashboard/app/views/layouts/application.html.erb	2024-02-12 12:32:59.600963188 +0200
+@@ -24,6 +24,11 @@
+   <meta name="profile" content="<%= @user_configuration.profile %>">
+ 
+   <%= render partial: 'layouts/config' %>
 +  <% begin %>
 +    <%= render partial: "widgets/extra_head" %>
 +  <% rescue ActionView::MissingTemplate %>
