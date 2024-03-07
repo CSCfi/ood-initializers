@@ -108,7 +108,7 @@ EOF
   end
 
   def render_erb(template)
-    ERB.new(template, nil, "-").result(binding)
+    ERB.new(template, trim_mode: "-").result(binding)
   rescue => e
     Rails.logger.error("Error rendering template for app card: #{e}\n#{e.backtrace.take(10)}")
     ""
