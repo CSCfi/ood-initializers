@@ -4,12 +4,12 @@ diff -urN a/apps/dashboard/app/views/layouts/application.html.erb b/apps/dashboa
 @@ -24,6 +24,11 @@
    <meta name="profile" content="<%= @user_configuration.profile %>">
  
-   <%= render partial: 'layouts/config' %>
 +  <% begin %>
 +    <%= render partial: "widgets/extra_head" %>
 +  <% rescue ActionView::MissingTemplate %>
 +    <% Rails.logger.error("missing widgets/_extra_head.html.erb") %>
 +  <% end %>
+   <%= render partial: 'layouts/config' %>
  </head>
  <body>
    <header>
