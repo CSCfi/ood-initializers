@@ -1,15 +1,15 @@
 # Note: When editing this file, changes will only take effect
 # AFTER the PUNs are refreshed.
 
-# Require the smart attributes for batch connect forms
-require "smart_attributes"
-require "#{ENV["CSC_OOD_DEPS_PATH"]}/util/attributes/csc_smart_attributes"
-
 # Add quota and balance file path for the user
 ENV["OOD_CSC_QUOTA_PATH"] = "/tmp/#{ENV["USER"]}_ood_quotas.json"
 ENV["OOD_CSC_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json"
 
 Rails.application.config.after_initialize do
+  # Require the smart attributes for batch connect forms
+  require "smart_attributes"
+  require "#{ENV["CSC_OOD_DEPS_PATH"]}/util/attributes/csc_smart_attributes"
+
   Rails.logger.info("Running dashboard initializer for user #{`whoami`.strip}")
 
   CSCConfiguration.reset_favorite_paths
