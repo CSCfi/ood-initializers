@@ -32,10 +32,6 @@ Rails.application.config.after_initialize do
     end
   end
 
-  NavConfig.categories_whitelist = true
-
-  NavConfig.categories = ["Files", "Jobs", "Apps", "Terminal", "Tools"]
-
   # Update quota and balance JSON files in tmp, set BU limit to 5%
   LustreQuota.write_quota_warning_json(ENV["OOD_CSC_QUOTA_PATH"])
 
