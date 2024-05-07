@@ -34,7 +34,7 @@ function add_remote_links(remotes) {
     const html = `
     <li>
       <a title="${remote}" class="dropdown-item" href="${remote_url}">
-        <i id="" class="fas fa-folder fa-fw app-icon" title="FontAwesome icon specified: folder" aria-hidden="true"></i>
+        <i id="" class="fas fa-cloud fa-fw app-icon" title="FontAwesome icon specified: cloud" aria-hidden="true"></i>
         ${remote}
       </a>
     </li>`;
