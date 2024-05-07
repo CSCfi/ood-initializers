@@ -38,3 +38,12 @@ custom_pages:
             - shared_style
             - versions
 <% end %>
+<% if File.directory?("/var/www/ood/apps/sys/ood-cloud-storage-conf") %>
+  cloud_storage:
+    rows:
+      - columns:
+        - width: 12
+          widgets:
+            - shared_style
+            - cloud_storage
+<% end %>
