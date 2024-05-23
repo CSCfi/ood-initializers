@@ -9,7 +9,7 @@
 %undefine _disable_source_fetch
 
 Name:           ood-initializers
-Version:        10
+Version:        11
 Release:        1%{?dist}
 Summary:        Open on Demand initializers
 
