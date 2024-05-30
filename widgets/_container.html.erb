@@ -10,3 +10,8 @@
   <% end %>
   <%= yield %>
 </div>
+<% if local_assigns[:wide] %>
+  <script>
+    $("body > .container-md").addClass("unset-max-width");
+  </script>
+<% end %>
