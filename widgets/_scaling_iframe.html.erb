@@ -1,0 +1,29 @@
+<% src = local_assigns[:src] %>
+<% if src.present? %>
+  <iframe class="container-iframe" frameBorder="0"></iframe>
+  <script>
+    (function () {
+      const iframe = $(".container-iframe");
+      const src = "<%= src %>";
+
+      const resizeObserver = new ResizeObserver(entries => {
+        let height = 0;
+        for (const entry of entries) {
+          if (entry.contentBoxSize) {
+            const cbs = entry.contentBoxSize[0] || entry.contentBoxSize;
+            height = Math.max(height, cbs.blockSize);
+          } else {
+            height = Math.max(height, cbs.contentRect.height);
+          }
+        }
+        iframe.css("height", `${height + 40}px`);
+      });
+
+      iframe.on("load", function() {
+        resizeObserver.observe(iframe[0].contentWindow.document.body);
+      });
+      iframe.attr("src", src);
+    })()
+  </script>
+
+<% end %>
