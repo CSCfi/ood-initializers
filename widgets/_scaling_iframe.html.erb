@@ -21,7 +21,6 @@
 
       iframe.on("load", function() {
         resizeObserver.observe(iframe[0].contentWindow.document.documentElement);
-        console.log(iframe[0].contentWindow.document);
       });
       iframe.attr("src", src);
     })()
