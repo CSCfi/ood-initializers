@@ -16,11 +16,12 @@
             height = Math.max(height, cbs.contentRect.height);
           }
         }
-        iframe.css("height", `${height + 40}px`);
+        iframe.css("height", `${height}px`);
       });
 
       iframe.on("load", function() {
-        resizeObserver.observe(iframe[0].contentWindow.document.body);
+        resizeObserver.observe(iframe[0].contentWindow.document.documentElement);
+        console.log(iframe[0].contentWindow.document);
       });
       iframe.attr("src", src);
     })()
