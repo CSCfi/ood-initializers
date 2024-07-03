@@ -4,6 +4,8 @@ module CSCModules
   # e.g. /projappl/<project>/www_mahti_modules
   PROJECT_MODULES_DIR = "www_#{ENV["CSC_CLUSTER"]}_modules"
 
+  MODULE_SPIDER_FILE = "/opt/csc/modules.json"
+
   # Struct for a modules not in the normal module tree
   Module = Struct.new(:name, :path, :test, :global, :project, :resources, keyword_init: true) do
     class << self
@@ -134,6 +136,13 @@ module CSCModules
     # Get test/private modules
     def get_jupyter_private_modules
       get_jupyter_modules(PRIVATE_MODULES_DIR)
+    end
+
+    def spider(name)
+      modules = JSON.parse(File.read(MODULE_SPIDER_FILE))
+      mod = modules.find { |m| m["package"] == name }
+      default = mod["defaultVersionName"]
+      "#{mod["package"]}/#{default}"
     end
 
     # Searches a path for modules, filters for string in the file
