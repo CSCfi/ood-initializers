@@ -138,9 +138,26 @@ module CSCModules
       get_jupyter_modules(PRIVATE_MODULES_DIR)
     end
 
-    def spider(name)
-      modules = JSON.parse(File.read(MODULE_SPIDER_FILE))
-      mod = modules.find { |m| m["package"] == name }
+    def module_spider
+      @@module_spider ||= JSON.parse(File.read(MODULE_SPIDER_FILE))
+    rescue => e
+      Rails.logger.error("Error reading module spider file at #{MODULE_SPIDER_FILE}: #{e}")
+      []
+    end
+
+    def all_versions(name)
+      mod = module_spider.find { |m| m["package"] == name }
+      default = mod["defaultVersionName"]
+      # Sorted list of full module names, with default module first
+      versions = mod["versions"]
+        .sort_by { |v| [v["versionName"] == default ? 1 : 0, v["versionName"].split(/[,-]/).map(&:to_i)] }
+        .map { |v| { name: v["full"], default: v["versionName"] == default } }
+        .reverse
+      versions
+    end
+
+    def default_version(name)
+      mod = module_spider.find { |m| m["package"] == name }
       default = mod["defaultVersionName"]
       "#{mod["package"]}/#{default}"
     end
