@@ -33,7 +33,7 @@ Rails.application.config.after_initialize do
   end
 
   # Update quota and balance JSON files in tmp, set BU limit to 5%
-  LustreQuota.write_quota_warning_json(ENV["OOD_CSC_QUOTA_PATH"])
+  # LustreQuota.write_quota_warning_json(ENV["OOD_CSC_QUOTA_PATH"])
 
   # Use OODs default quota warnings for home directory only
   # Other quota warnings will be visible in the widget and use env vars OOD_CSC_*
@@ -82,7 +82,7 @@ module CSCConfiguration
         to = 1 
         paths.concat projects.filter_map { |p| FavoritePath.new("/projappl/#{p}") if File.exist?("/projappl/#{p}") }
         paths.concat projects.filter_map { |p| FavoritePath.new("/scratch/#{p}") if File.exist?("/scratch/#{p}") }
-        paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if  checkWithTimeout("/flash/#{p}",1) }
+        #paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if  checkWithTimeout("/flash/#{p}",1) }
       end
     end
   end
