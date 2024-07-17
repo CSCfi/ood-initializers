@@ -1,6 +1,6 @@
 # Note: When editing this file, changes will only take effect
 # AFTER the PUNs are refreshed.
-
+require 'timeout'
 # Add quota and balance file path for the user
 ENV["OOD_CSC_QUOTA_PATH"] = "/tmp/#{ENV["USER"]}_ood_quotas.json"
 ENV["OOD_CSC_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json"
@@ -49,6 +49,18 @@ Rails.application.config.after_initialize do
   end
 end
 
+def checkWithTimeout(path,timer)
+  begin
+    status = Timeout::timeout(timer) {
+    File.exist?(path)
+  }
+  rescue
+    return true 
+  end
+  return status
+end  
+
+
 module CSCConfiguration
   class << self
     def release_name
@@ -67,9 +79,10 @@ module CSCConfiguration
         # file app as links.
         projects = User.new.groups.map(&:name)
         # Assuming that the directories are named like the projects.
+        to = 1 
         paths.concat projects.filter_map { |p| FavoritePath.new("/projappl/#{p}") if File.exist?("/projappl/#{p}") }
         paths.concat projects.filter_map { |p| FavoritePath.new("/scratch/#{p}") if File.exist?("/scratch/#{p}") }
-        paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if File.exist?("/flash/#{p}") }
+        paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if  checkWithTimeout("/flash/#{p}",1) }
       end
     end
   end
