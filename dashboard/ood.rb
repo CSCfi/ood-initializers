@@ -49,18 +49,6 @@ Rails.application.config.after_initialize do
   end
 end
 
-def checkWithTimeout(path,timer)
-  begin
-    status = Timeout::timeout(timer) {
-    File.exist?(path)
-  }
-  rescue
-    return true 
-  end
-  return status
-end  
-
-
 module CSCConfiguration
   class << self
     def release_name
@@ -72,6 +60,10 @@ module CSCConfiguration
         end
     end
 
+    def enable_flash?
+      ENV.fetch("OOD_CSC_ENABLE_FLASH", "false") == "true"
+    end
+
     def reset_favorite_paths
       OodFilesApp.candidate_favorite_paths.tap do |paths|
         paths.clear
@@ -79,10 +71,9 @@ module CSCConfiguration
         # file app as links.
         projects = User.new.groups.map(&:name)
         # Assuming that the directories are named like the projects.
-        to = 1 
         paths.concat projects.filter_map { |p| FavoritePath.new("/projappl/#{p}") if File.exist?("/projappl/#{p}") }
         paths.concat projects.filter_map { |p| FavoritePath.new("/scratch/#{p}") if File.exist?("/scratch/#{p}") }
-        #paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if  checkWithTimeout("/flash/#{p}",1) }
+        paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if  File.exist?("/flash/#{p}") } if enable_flash?
       end
     end
   end

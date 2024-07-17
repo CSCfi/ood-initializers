@@ -8,7 +8,7 @@ begin
     ffi_lib [
       "quota",
       "libquota.so",
-      File.join(ENV.fetch("CSC_OOD_DEPS_PATH", "/var/www/ood/deps"), "lib", "libquota.so"),
+      File.join(ENV.fetch("CSC_OOD_DEPS_PATH", "/var/www/ood/deps"), "lib", "libquota#{CSCConfiguration.enable_flash? ? "" : "no-flash" }.so"),
     ]
 
     attach_function :get_quotas, [:pointer], :pointer
