@@ -4,11 +4,12 @@ require "json"
 begin
   module LustreQuotaInterop
     extend FFI::Library
+    LIB_NAME = "libquota#{CSCConfiguration.enable_flash? ? "" : "-no-flash" }.so"
     # libquota.so should be under CSC_OOD_DEPS_PATH, but can set LD_LIBRARY_PATH to override.
     ffi_lib [
       "quota",
-      "libquota.so",
-      File.join(ENV.fetch("CSC_OOD_DEPS_PATH", "/var/www/ood/deps"), "lib", "libquota#{CSCConfiguration.enable_flash? ? "" : "no-flash" }.so"),
+      LIB_NAME,
+      File.join(ENV.fetch("CSC_OOD_DEPS_PATH", "/var/www/ood/deps"), "lib", LIB_NAME),
     ]
 
     attach_function :get_quotas, [:pointer], :pointer
