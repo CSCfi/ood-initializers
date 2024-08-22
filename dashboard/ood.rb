@@ -5,6 +5,8 @@
 ENV["OOD_CSC_QUOTA_PATH"] = "/tmp/#{ENV["USER"]}_ood_quotas.json"
 ENV["OOD_CSC_BALANCE_PATH"] = "/tmp/#{ENV["USER"]}_ood_balance.json"
 
+require "sys_router"
+
 Rails.application.config.after_initialize do
   # Require the smart attributes for batch connect forms
   require "smart_attributes"
@@ -77,7 +79,7 @@ module CSCConfiguration
       # Hide if app does not exist or user does not have access to it.
       return "" if app && !File.readable?("#{SysRouter.base_path}/#{app}")
       # Hide if user does not belong to group.
-      return "" if group && !User.new.groups.map(&:name).include?(group)
+      return "" if group && !OodSupport::User.new.groups.map(&:name).include?(group)
       widget = widget || name
       entry = Hash[name, {
         rows: [
