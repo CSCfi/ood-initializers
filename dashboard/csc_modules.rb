@@ -147,6 +147,7 @@ module CSCModules
 
     def all_versions(name)
       mod = module_spider.find { |m| m["package"] == name }
+      return [] if mod.nil?
       default = mod["defaultVersionName"]
       # Sorted list of full module names, with default module first
       versions = mod["versions"]
