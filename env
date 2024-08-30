@@ -19,7 +19,7 @@ OOD_CSC_NEGATIVE_BU_CHECK="true"
 
 # TODO: Move these to dashboard.yml
 OOD_DASHBOARD_DOCS_URL="https://docs.csc.fi"
-OOD_DASHBOARD_PASSWD_URL="https://my.csc.fi/support"
+OOD_DASHBOARD_PASSWD_URL="https://my.csc.fi"
 OOD_DASHBOARD_SUPPORT_URL="https://research.csc.fi/support"
 OOD_DASHBOARD_SUPPORT_EMAIL="servicedesk@csc.fi"
 
