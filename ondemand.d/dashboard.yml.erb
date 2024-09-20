@@ -84,7 +84,8 @@ profiles:
       - "sys/ood-persistent-ssh"
       - "sys/ood-shell"
       - "sys/ood-cloud-storage-conf"
-      - profiles: "*{industry}*"
+      - type: sys
+        profiles: "*{industry}*"
     interactive_apps_menu:
       title: "Apps"
       links:
