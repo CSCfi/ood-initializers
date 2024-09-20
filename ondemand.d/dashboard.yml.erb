@@ -11,7 +11,7 @@ pinned_apps:
   - "sys/files"
   - "sys/ood-persistent-ssh"
   - "sys/ood-shell"
-  - "sys/ood-vnc"
+  - "sys/ood-vnc/default"
   - "sys/ood-cloud-storage-conf"
   - "sys/activejobs"
   - "sys/ood-base-jupyter"
@@ -25,15 +25,90 @@ pinned_apps_menu_length: 0
 brand_bg_color: "#FFFFFF"
 brand_link_active_bg_color: "#E9ECEF"
 navbar_type: "light"
-nav_categories:
-  - "Files"
-  - "Jobs"
-  - "Apps"
-  - "Terminal"
+
+nav_bar:
+  - files
+  - jobs
+  - title: "Apps"
+    apps:
+      - type: sys
+        category: "Apps"
+        profiles: "*{all,default}*"
   - "Tools"
+  - sessions
 
 custom_css_files: ['../assets/stylesheets/dashboard.css']
 cancel_session_enabled: true
+help_bar:
+  - "develop"
+  - title: "Profiles"
+    links:
+      - title: "Default"
+        icon: "fa://cog"
+        profile: "default"
+      - title: "Industry"
+        icon: "fa://cog"
+        profile: "industry"
+  - "help"
+  - "user"
+  - "log_out"
+
+interactive_apps_menu:
+  title: "Apps"
+  links:
+    - group: "Editors"
+    - apps:
+      - type: sys
+        subcategory: "Editors"
+        profiles: "*{all,default}*"
+    - group: "Graphical applications"
+    - apps:
+      - type: sys
+        subcategory: "Graphical applications"
+        profiles: "*{all,default}*"
+    - group: "Servers"
+    - apps:
+      - type: sys
+        subcategory: "Servers"
+        profiles: "*{all,default}*"
+    - group: "Tools"
+    - apps:
+      - type: sys
+        category: "Tools"
+        profiles: "*{all,default}*"
+
+profiles:
+  industry:
+    pinned_apps:
+      - "sys/files"
+      - "sys/ood-persistent-ssh"
+      - "sys/ood-shell"
+      - "sys/ood-vnc/default"
+      - "sys/ood-cloud-storage-conf"
+      - profiles: "*{industry}*"
+    interactive_apps_menu:
+      title: "Apps"
+      links:
+        - group: "Editors"
+        - apps:
+          - type: sys
+            subcategory: "Editors"
+            profiles: "*{industry}*"
+        - group: "Graphical applications"
+        - apps:
+          - type: sys
+            subcategory: "Graphical applications"
+            profiles: "*{industry}*"
+        - group: "Servers"
+        - apps:
+          - type: sys
+            subcategory: "Servers"
+            profiles: "*{industry}*"
+        - group: "Tools"
+        - apps:
+          - type: sys
+            category: "Tools"
+            profiles: "*{industry}*"
 
 custom_pages:
   empty: {}
