@@ -27,24 +27,24 @@ module CSCConfiguration
         paths.concat projects.filter_map { |p| FavoritePath.new("/flash/#{p}") if  File.exist?("/flash/#{p}") } if enable_flash?
       end
     end
-  end
 
-  # Helper function to generate dashboard.yml configurations for custom dashboard pages.
-  def custom_page(name, widget: nil, app: nil, group: nil, indent: 2)
-    # Hide if app does not exist or user does not have access to it.
-    return "" if app && !File.readable?("#{SysRouter.base_path}/#{app}")
-    # Hide if user does not belong to group.
-    return "" if group && !OodSupport::User.new.groups.map(&:name).include?(group)
-    widget = widget || name
-    entry = Hash[name, {
-      rows: [
-        {
-          columns: [
-            { widgets: ["shared_style", widget] }
-          ]
-        }
-      ]
-    }].deep_stringify_keys
-    Psych.dump(entry).gsub(/\A---\n/, '').gsub(/^/, " "*indent)
+    # Helper function to generate dashboard.yml configurations for custom dashboard pages.
+    def custom_page(name, widget: nil, app: nil, group: nil, indent: 2)
+      # Hide if app does not exist or user does not have access to it.
+      return "" if app && !File.readable?("#{SysRouter.base_path}/#{app}")
+      # Hide if user does not belong to group.
+      return "" if group && !OodSupport::User.new.groups.map(&:name).include?(group)
+      widget = widget || name
+      entry = Hash[name, {
+        rows: [
+          {
+            columns: [
+              { widgets: ["shared_style", widget] }
+            ]
+          }
+        ]
+      }].deep_stringify_keys
+      Psych.dump(entry).gsub(/\A---\n/, '').gsub(/^/, " "*indent)
+    end
   end
 end
