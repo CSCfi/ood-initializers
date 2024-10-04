@@ -17,11 +17,13 @@
           }
         }
         iframe.css("height", `${height}px`);
+        iframe.css("visibility", `visible`);
       });
 
       iframe.on("load", function() {
         resizeObserver.observe(iframe[0].contentWindow.document.documentElement);
       });
+      iframe.css("visibility", `hidden`);
       iframe.attr("src", src);
     })()
   </script>
