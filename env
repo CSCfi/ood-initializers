@@ -31,3 +31,4 @@ OOD_NATIVE_VNC_LOGIN_HOST="lumi.csc.fi"
 
 MOTD_PATH="/dev/null"
 
+OOD_CSC_ENABLE_FLASH="true"
