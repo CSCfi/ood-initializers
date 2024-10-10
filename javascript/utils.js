@@ -56,3 +56,15 @@ function refresh_remotes() {
   const dashboard_url = window.location.pathname.split("/").slice(0,4).join("/");
   fetch(`${dashboard_url}/custom/refresh_remotes`).then(res => res.text());
 }
+
+// Customizing nav bar makes the files dropdown not be sorted.
+// Move the home directory to be the first entry in the list.
+function fix_files_sort() {
+  const home_link = $("a.dropdown-item[title='Home Directory']");
+  const dropdown = home_link.closest(".dropdown-menu");
+  dropdown.prepend(home_link.parent());
+}
+
+$(function() {
+  fix_files_sort();
+});
