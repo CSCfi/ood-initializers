@@ -63,7 +63,7 @@ module CSCModules
   end
 
   # Struct for the resources of a module, loaded from a YML file for each module
-  Resources = Struct.new(:cores, :time, :mem, :local_disk, :partition, :reservation, :working_dir, :project, keyword_init: true) do
+  Resources = Struct.new(:cores, :time, :mem, :local_disk, :gpus, :partition, :reservation, :working_dir, :project, keyword_init: true) do
     class << self
       def from_path(path, project: nil)
         if File.extname(path) == ".yml"
@@ -87,6 +87,7 @@ module CSCModules
           "data-set-csc-time".to_sym => time,
           "data-set-csc-memory".to_sym => (mem.to_i.to_s unless mem.nil?),
           "data-set-csc-nvme".to_sym => local_disk,
+          "data-set-csc-gpu".to_sym => gpus.to_i,
           "data-set-csc-slurm-partition".to_sym => partition,
           "data-csc-slurm-reservation".to_sym => reservation,
           "data-set-notebook-dir".to_sym => working_dir&.gsub("$PROJECT", project)&.gsub("$USER", Etc.getpwuid.name)&.gsub("$HOME", Dir.home),
