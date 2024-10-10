@@ -20,6 +20,7 @@ pinned_apps:
   - "sys/ood-course-jupyter"
   - "sys/ood-julia-jupyter"
   - "sys/ood-matlab-html"
+  - "sys/ood-mlflow"
   - "sys/ood-tensorboard"
   - "sys/ood-vscode"
 pinned_apps_menu_length: 0
@@ -87,7 +88,6 @@ profiles:
       - "sys/ood-shell"
       - "sys/ood-cloud-storage-conf"
       - "sys/ood-disk-quotas"
-      - "sys/ood-csc-status"
       - "sys/activejobs"
       - type: sys
         profiles: "*{industry}*"
@@ -119,6 +119,16 @@ profiles:
           - type: sys
             category: "Tools"
             profiles: "*{industry}*"
+    nav_bar:
+      - files
+      - jobs
+      - title: "Apps"
+        apps:
+          - type: sys
+            category: "Apps"
+            profiles: "*{all,industry}*"
+      - "Tools"
+      - sessions
 
 custom_pages:
   empty: {}
