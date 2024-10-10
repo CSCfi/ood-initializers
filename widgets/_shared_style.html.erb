@@ -55,7 +55,7 @@
       }
 
       #pinned_apps {
-<% if UserConfiguration.new.profile == "industry" %>
+<% if UserConfiguration.new.profile == :industry %>
         --row-items: 8;
 <% else %>
         --row-items: 7;
