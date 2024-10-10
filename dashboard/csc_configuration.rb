@@ -49,7 +49,7 @@ module CSCConfiguration
 
     def industry_user?
       projects = User.new.groups.map(&:name)
-      industry_projects = File.read(File.join("/pfs", "lustrep3", "appl", "local", "ood", ENV["SLURM_OOD_ENV"], "industry_projects.txt")).lines.map(&:strip)
+      industry_projects = File.read("/opt/csc/industry_projects.txt").lines.map(&:strip)
       industry_user = projects.any? { |p| industry_projects.include?(p) }
     rescue => e
       false
