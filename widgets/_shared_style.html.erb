@@ -55,7 +55,11 @@
       }
 
       #pinned_apps {
+<% if UserConfiguration.new.profile == "industry" %>
+        --row-items: 8;
+<% else %>
         --row-items: 7;
+ <% end %>
       }
       #recent_apps {
         --row-items: 4;
