@@ -44,6 +44,7 @@ custom_css_files: ['../assets/stylesheets/dashboard.css']
 cancel_session_enabled: true
 help_bar:
   - "develop"
+<% if CSCConfiguration.industry_user? %>
   - title: "Profiles"
     links:
       - title: "Default"
@@ -55,6 +56,7 @@ help_bar:
   - "help"
   - "user"
   - "log_out"
+  <% end %>
 
 interactive_apps_menu:
   title: "Apps"
@@ -85,6 +87,7 @@ interactive_apps_menu:
         subcategory: "Course environments"
         profiles: "*{all,default}*"
 
+<% if CSCConfiguration.industry_user? %>
 profiles:
   industry:
     pinned_apps:
@@ -142,6 +145,7 @@ profiles:
             profiles: "*{all,industry}*"
       - "Tools"
       - sessions
+<% end %>
 
 custom_pages:
   empty: {}
