@@ -189,7 +189,7 @@ EOF
 
   # Parse the last lines of log_file and find common exit reasons
   def find_exit_reason(log_file)
-    if File.exists?(log_file) && File.readable?(log_file)
+    if File.exist?(log_file) && File.readable?(log_file)
       lines, _ = Open3.capture2("tail", "-n 9", log_file.to_s)
       # Slurm time limit
       if lines.include?("DUE TO TIME LIMIT")
@@ -213,7 +213,7 @@ EOF
 
   # Read the contents of a file or write contents returned by block if it doesn't exist
   def cached_or_else(file, &block)
-    if File.exists?(file) && File.readable?(file)
+    if File.exist?(file) && File.readable?(file)
       File.open(file, File::NOFOLLOW) { |f| f.read }
     else
       content = yield
