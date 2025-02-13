@@ -56,8 +56,8 @@ EOF
   <button
     class="btn btn-primary"
     type="button"
-    data-toggle="collapse"
-    data-target="#seff_stats_<%= job_id -%>"
+    data-bs-toggle="collapse"
+    data-bs-target="#seff_stats_<%= job_id -%>"
     aria-expanded="false"
     aria-controls="seff_stats_<%= job_id -%>"
     id="toggle_stats_<%= job_id -%>"
