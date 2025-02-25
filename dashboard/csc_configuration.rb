@@ -1,5 +1,3 @@
-require "sys_router"
-
 module CSCConfiguration
   class << self
     def release_name
@@ -31,7 +29,7 @@ module CSCConfiguration
     # Helper function to generate dashboard.yml configurations for custom dashboard pages.
     def custom_page(name, widget: nil, app: nil, group: nil, indent: 2)
       # Hide if app does not exist or user does not have access to it.
-      return "" if app && !File.readable?("#{SysRouter.base_path}/#{app}")
+      return "" if app && !File.readable?(File.join("/var/www/ood/apps/sys", app))
       # Hide if user does not belong to group.
       return "" if group && !OodSupport::User.new.groups.map(&:name).include?(group)
       widget = widget || name
@@ -48,7 +46,7 @@ module CSCConfiguration
     end
 
     def industry_user?
-      projects = User.new.groups.map(&:name)
+      projects = OodSupport::User.new.groups.map(&:name)
       industry_projects = File.read("/opt/csc/industry_projects.txt").lines.map(&:strip)
       industry_user = projects.any? { |p| industry_projects.include?(p) }
     rescue => e
