@@ -31,8 +31,8 @@ body {
   border-radius: 0 0.25rem 0.25rem 0;
 }
 
-#new_batch_connect_session_context .form-group.nav-pills {
-  margin-bottom: 0;
+#new_batch_connect_session_context .mb-3.nav-pills {
+  margin-bottom: 0 !important;
 }
 
 #new_batch_connect_session_context .text-muted {
