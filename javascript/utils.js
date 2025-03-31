@@ -54,5 +54,5 @@ function remove_remote_links(remotes) {
 
 function refresh_remotes() {
   const dashboard_url = window.location.pathname.split("/").slice(0,4).join("/");
-  fetch(`${dashboard_url}/custom/refresh_remotes`).then(res => res.text());
+  fetch(`${dashboard_url}/widgets/refresh_remotes`).then(res => res.text());
 }
