@@ -38,3 +38,4 @@ en:
 
     # Rename the pinned apps category to be able to hide it (default: Apps)
     pinned_apps_category: 'Pinned Apps'
+    batch_connect_form_save_submit: "Save settings and launch"
