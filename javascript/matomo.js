@@ -1,5 +1,6 @@
-const MATOMO_URL = '';
-const MATOMO_SITE_ID = '';
+import { analytics } from "/assets/modules/constants.js";
+const MATOMO_URL = analytics.url;
+const MATOMO_SITE_ID = analytics.siteId;
 const FILES_APP_PATHNAME = '/pun/sys/dashboard/files';
 const SHELL_APP_PATHNAME = '/pun/sys/shell/ssh';
 const APPS_PATHNAME = '/pun/sys/dashboard/apps';
