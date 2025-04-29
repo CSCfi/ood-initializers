@@ -39,5 +39,27 @@ module CSCConfiguration
       }].deep_stringify_keys
       Psych.dump(entry).gsub(/\A---\n/, '').gsub(/^/, " "*indent)
     end
+
+    # Helper function for submit.yml.erb for validating that the requested job duration is allowed
+    def validate_job_length(requested)
+      max_length = ENV["OOD_CSC_MAX_JOB_LENGTH"]
+      if requested.blank? || max_length.blank?
+        return
+      end
+      time_regex = Regexp.new(/^(?:(?:(?:(?<d>\d+)-)?(?<h>\d+):)?(?<m>\d+):)?(?<s>\d+)$/)
+      req_match = time_regex.match(requested)
+      conf_match = time_regex.match(max_length)
+      req_seconds = req_match[:d].to_i * 24 * 60 * 60 +
+                    req_match[:h].to_i * 60 * 60 +
+                    req_match[:m].to_i * 60 +
+                    req_match[:s].to_i
+      conf_max_seconds = conf_match[:d].to_i * 24 * 60 * 60 +
+                    conf_match[:h].to_i * 60 * 60 +
+                    conf_match[:m].to_i * 60 +
+                    conf_match[:s].to_i
+      if req_seconds > conf_max_seconds
+        raise "Requested job length exceeds maximum allowed (#{max_length})"
+      end
+    end
   end
 end
