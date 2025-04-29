@@ -18,6 +18,8 @@ OOD_CSC_BALANCE_IGNORE_TIME="14"
 
 OOD_CSC_NEGATIVE_BU_CHECK="true"
 
+OOD_CSC_MAX_JOB_LENGTH="16:00:00"
+
 # TODO: Move these to dashboard.yml
 OOD_DASHBOARD_DOCS_URL="https://docs.csc.fi"
 OOD_DASHBOARD_PASSWD_URL="https://my.csc.fi"
