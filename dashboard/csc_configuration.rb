@@ -41,9 +41,10 @@ module CSCConfiguration
     end
 
     # Helper function for submit.yml.erb for validating that the requested job duration is allowed
-    def validate_job_length(requested)
+    def validate_job_length(requested, partition_name="")
       max_length = ENV["OOD_CSC_MAX_JOB_LENGTH"]
-      if requested.blank? || max_length.blank?
+      skip_check = ENV.fetch("OOD_CSC_SKIP_JOB_LENGTH_CHECK_PARTITIONS", "").split(",").include?(partition_name)
+      if requested.blank? || max_length.blank? || skip_check
         return
       end
       time_regex = Regexp.new(/^(?:(?:(?:(?<d>\d+)-)?(?<h>\d+):)?(?<m>\d+):)?(?<s>\d+)$/)
