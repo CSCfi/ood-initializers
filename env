@@ -38,3 +38,5 @@ ANSYS_GROUP="project_2001977"
 
 MOTD_PATH="/dev/null"
 
+# Default time for "directories" with Allas Swift
+RCLONE_DEFAULT_TIME="1970-01-01"
