@@ -31,3 +31,6 @@ ENABLE_NATIVE_VNC="yes"
 OOD_NATIVE_VNC_LOGIN_HOST="lumi.csc.fi"
 
 MOTD_PATH="/dev/null"
+
+# Default time for "directories" with Allas Swift
+RCLONE_DEFAULT_TIME="1970-01-01"
