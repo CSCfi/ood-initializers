@@ -1,5 +1,5 @@
 module CSCModules
-  GLOBAL_MODULES_DIR = "/appl/modulefiles/courses"
+  GLOBAL_MODULES_DIR = "/appl/local/csc/modulefiles/www_#{ENV["CSC_CLUSTER"]}_modules"
   PRIVATE_MODULES_DIR = File.join(Dir.home, "privatemodules")
   # e.g. /projappl/<project>/www_mahti_modules
   PROJECT_MODULES_DIR = "www_#{ENV["CSC_CLUSTER"]}_modules"
