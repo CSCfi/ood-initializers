@@ -92,7 +92,7 @@ module CSCModules
           "data-set-csc-gpu".to_sym => gpus.to_i,
           "data-set-csc-slurm-partition".to_sym => partition,
           "data-csc-slurm-reservation".to_sym => reservation,
-          "data-set-notebook-dir".to_sym => working_dir&.gsub("$PROJECT", project)&.gsub("$USER", Etc.getpwuid.name)&.gsub("$HOME", Dir.home),
+          "data-set-notebook-dir".to_sym => working_dir&.gsub("$PROJECT", project || "$PROJECT")&.gsub("$USER", Etc.getpwuid.name)&.gsub("$HOME", Dir.home),
         }.compact,
       ]
     end
