@@ -5,7 +5,7 @@
 %define layouts_path %{dashboard_path}/app/views/layouts/
 
 Name:           ood-initializers
-Version:        12
+Version:        13
 Release:        1%{?dist}
 Summary:        Open on Demand initializers
 
